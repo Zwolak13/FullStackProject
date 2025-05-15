@@ -2,6 +2,9 @@ package com.fullstackproject.backend.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Table(name = "users")
@@ -19,13 +22,18 @@ public class User {
     @Column(nullable = false)
     private String email;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ShoppingList> shoppingLists = new ArrayList<>();
+
+
     // Constructors
     public User() {}
 
-    public User(String username, String password, String email) {
+    public User(String username, String password, String email, List<ShoppingList> shoppingLists) {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.shoppingLists = shoppingLists;
     }
 
     // Getters and setters
@@ -60,4 +68,8 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public List<ShoppingList> getShoppingLists() { return  shoppingLists; }
+
+    public void setShoppingLists(List<ShoppingList> shoppingLists) { this.shoppingLists = shoppingLists; }
 }
