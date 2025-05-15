@@ -28,10 +28,10 @@ export default function Login(){
     return(
         <main  className="flex items-center justify-center min-h-screen">
             <div className="w-screen h-screen  flex flex-row overflow-hidden">
-                <div id='rightSide' className="hidden md:block md:w-1/2 bg-gradient-to-br from-primiary-dark to-secondary-dark text-white md:flex flex-col justify-center items-center relative">
-                    <LeftSideBanerLogin />
+                <div id='rightSide' className="hidden  md:w-1/2 bg-gradient-to-br from-primiary-dark to-secondary-dark text-white md:flex flex-col justify-center items-center relative">
+                    <LeftSideBanerLogin onSignup={handleSignupForm} isDisabled={whichForm}/>
                 </div>
-                <div id='leftSide' className={`flex flex-col justify-center items-center md:w-1/2 relative ${isLoading && 'active'} ${direction === 'up' && 'reverseDirection'}`} >
+                <div id='leftSide' className={`flex w-screen flex-col justify-center items-center md:w-1/2 relative ${isLoading && 'active'}}`} >
                      <div
                         className={`
                         absolute inset-0 bg-gradient-to-r from-primiary-dark to-secondary-dark
@@ -48,7 +48,7 @@ export default function Login(){
                     />
 
 
-                    {whichForm === 'login' ? <LoginForm onChange={handleSignupForm}/> : <SignupForm onClick={handleSignupForm}/>}
+                    {whichForm === 'login' ? <LoginForm isLoading={isLoading} onChange={handleSignupForm}/> : <SignupForm  isLoading={isLoading} onClick={handleSignupForm}/>}
                 </div>
             </div>
         </main>

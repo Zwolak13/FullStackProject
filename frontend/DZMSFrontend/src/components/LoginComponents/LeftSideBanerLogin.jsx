@@ -1,21 +1,19 @@
-import LOGO from '../../assets/logo.png'
+import Logo from "./Logo";
 
-export default function LeftSideBanerLogin(){
+
+export default function LeftSideBanerLogin({onSignup, isDisabled}){
     return (
         <>
-        <div className='relative'>
-                        <img src={LOGO} alt='ShopLifer-logo' className='w-48'/>
-                        <p className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-center bg-gradient-to-r from-secondary-light-one via-primary-light to-secondary-light_three text-transparent bg-clip-text font-bold text-2xl">
-                         ShopLifter
-                         </p>
-                    </div>
-                    <p>Welcome Back!</p>
-                    <p>To stay connected with us please login with you personal info</p>
+            <Logo />
+                    <p className="font-bold text-4xl pt-10 pb-2">Welcome Back!</p>
+                        <p className="italic text-[20px] pb-20">Track your purchases, expenses, and bills — all in one place</p>
+                        <p className="text-[16px] pb-5">Log in or Sign in to stay in touch and enjoy all our features</p>
 
-                    <button>Sing in</button>
-                    <div className="absolute bottom-[-100px] right-[-200px] w-200 h-150 bg-white rounded-t-full opacity-10 rotate-320 overflow-hidden"></div>
-                    <div className="absolute bottom-[-100px] right-[-200px] w-180 h-130 bg-white rounded-t-full opacity-10 rotate-320"></div>
-                    <div className="absolute bottom-[-100px] right-[-200px] w-160 h-110 bg-white rounded-t-full opacity-10 rotate-320"></div>
+
+                    <button type="button" disabled={isDisabled ==='signup' ? true : false}onClick={onSignup} className=" z-10 w-50 h-10 border-4  font-bold rounded-2xl hover:bg-white/50 hover:text-primiary-dark hover:border-white/60  transition duration-700 ease-in-out">Sign in</button>
+                    <div className=" z-0 absolute bottom-[-100px] right-[-200px] w-200 h-150 bg-white rounded-t-full opacity-10 rotate-320 overflow-hidden"></div>
+                    <div className="z-0 absolute bottom-[-100px] right-[-200px] w-180 h-130 bg-white rounded-t-full opacity-10 rotate-320"></div>
+                    <div className="z-0 absolute bottom-[-100px] right-[-200px] w-160 h-110 bg-white rounded-t-full opacity-10 rotate-320"></div>
         </>
     )
 }
