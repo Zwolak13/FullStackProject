@@ -16,7 +16,7 @@ export default function LoginForm({onChange, isLoading}){
                         <input type="password" name="password" placeholder="Password" className="px-2 w-100 h-12 rounded-2xl bg-primary-light/50 mb-2" />
                         <p className="mb-20">Forgot your <button type="button" onClick={()=>setIsModalOpen(true)} className="text-primiary-dark font-bold">password?</button></p>
                         <button type="button" className="bg-secondary-dark w-50 h-10 rounded-2xl text-white font-bold  hover:bg-white hover:text-secondary-dark hover:border-2 border-secondary-dark"  >Login</button>
-                        <p>Don't have account? <button type="button" className="text-primiary-dark font-bold hover:underline" disabled={isLoading} onClick={onChange}>sign up</button></p>
+                        <p>Don't have an account? <button type="button" className="text-primiary-dark font-bold hover:underline" disabled={isLoading} onClick={onChange}>sign up</button></p>
                      </form>
             
         </>

@@ -22,7 +22,7 @@ export default function PasswordModal({ onClose, isOpen }) {
           <h2 className="text-lg font-medium leading-6 text-gray-900">
             Reset password
           </h2>
-          <p className='mb-3'>Provide us your emial address to continue</p>
+          <p className='mb-3'>Provide us your email address to continue</p>
 
           {submitted ? (
             <p className="text-green-600">Link do resetu hasła został wysłany na Twój adres e-mail.</p>
