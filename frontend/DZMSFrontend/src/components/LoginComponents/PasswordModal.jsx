@@ -40,7 +40,7 @@ export default function PasswordModal({ onClose, isOpen }) {
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-2 w-1/4 bg-red-500/30  font-bold rounded hover:bg-gray-400"
+                  className="px-4 py-2 w-1/4 bg-red-500/60 text-white  font-bold rounded hover:bg-white hover:border-2 hover:text-red-500/60"
                 >
                   Cancel
                 </button>
