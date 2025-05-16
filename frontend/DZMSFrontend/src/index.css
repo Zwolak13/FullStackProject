@@ -6,5 +6,9 @@
     --color-secondary-dark: #1C3D2E;
     --color-primiary-dark: #2E5934;
     --color-secondary-light_two: #69BFA0;
-    --color-secondary-light_three: #5AA658
+    --color-secondary-light_three: #5AA658;
+
+
+    --breakpoint-md-: initial;
+    --breakpoint-md-: 1000px
 }

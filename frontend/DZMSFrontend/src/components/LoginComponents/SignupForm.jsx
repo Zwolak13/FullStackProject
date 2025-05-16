@@ -3,7 +3,7 @@ import Logo from "./Logo";
 export default function SignupForm({onClick, isLoading}){
     return (
         <>
-        <Logo className="block md:hidden"/>
+        <Logo className="block lg:hidden"/>
                     <h1 className="pt-12 text-4xl">Join Us!</h1>
                     <h2>Create your account to get full experience</h2>
                     <form className="flex flex-col py-15 items-center" >
