@@ -5,7 +5,7 @@ export default function LeftSideBanerLogin({onSignup, isDisabled, isLoading}){
     return (
         <>
             <Logo />
-                    <p className="font-bold text-4xl pt-10 pb-2">Welcome Back!</p>
+                    <p className="font-bold text-4xl pt-10 pb-2">Welcome to ShopLifter!</p>
                         <p className="italic text-[20px] pb-20 px-10 text-center">Track your purchases, expenses, and bills — all in one place</p>
                         <p className="text-[16px] pb-5">Log in or Sign in to stay in touch and enjoy all our features</p>
 

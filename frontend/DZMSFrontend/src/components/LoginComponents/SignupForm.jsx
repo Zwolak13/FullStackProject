@@ -11,7 +11,7 @@ export default function SignupForm({onClick, isLoading}){
                         <input type="password" name="password" placeholder="Password" className="px-2 w-100 h-12 rounded-2xl bg-primiary-dark/50 " />
                         <input type="password" name="confirmPassword" placeholder="Confirm Password" className="px-2 w-100 h-12 rounded-2xl bg-primiary-dark/50 my-8" />
                         <button type="button" className="bg-secondary-dark w-50 h-8 rounded-2xl text-white font-bold" >Login</button>
-                        <p>You already have account? <button type="button" onClick={onClick} disabled={isLoading} className="text-primiary-dark font-bold hover:underline">login</button></p>
+                        <p>You already have an account? <button type="button" onClick={onClick} disabled={isLoading} className="text-primiary-dark font-bold hover:underline">login</button></p>
                      </form>
 
         </>
