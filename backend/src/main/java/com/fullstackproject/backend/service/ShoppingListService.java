@@ -19,8 +19,13 @@ public class ShoppingListService {
     }
 
     // Zapisz nowy ShoppingList
-    public ShoppingList saveShoppingList(ShoppingList ShoppingList) {
-        return shoppingListRepository.save(ShoppingList);
+    public ShoppingList saveShoppingList(ShoppingList shoppingList) {
+        BigDecimal totalPrice = shoppingList.getItems().stream()
+                .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        shoppingList.setPrice(totalPrice);
+        return shoppingListRepository.save(shoppingList);
     }
 
     // Znajdź ShoppingList po ID
