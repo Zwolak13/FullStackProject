@@ -31,7 +31,7 @@ export default function SignupForm({onClick, isLoading}){
                         <Input type="text" name="email" placeholder="Email"  className=" px-2 w-100 h-12 rounded-2xl bg-primary-light/50 " 
                         onChange={handleEmailChange} value={emailValue} onBlur={handleEmailBlur} 
                         error={emailIsInvalid && 'Please enter valid email.'}/>
-                        <Input type="text" name="password" placeholder="Password"  className=" px-2 w-100 h-12 rounded-2xl bg-primary-light/50 " 
+                        <Input type="password" name="password" placeholder="Password"  className=" px-2 w-100 h-12 rounded-2xl bg-primary-light/50 "
                         onChange={handlePasswordChange} value={passwordValue} onBlur={handlePasswordBlur} 
                         error={passwordIsInvalid && 'Password must contain at least one uppercase letter and one special character.'}/>
                         <Input type="password" name="confirmPassword" placeholder="Confirm Password" className=" px-2 w-100 h-12 rounded-2xl bg-primary-light/50 "
