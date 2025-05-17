@@ -3,7 +3,7 @@ export default function Input({error,...props}){
       <>
           <input {...props}/>
           <div className={`${error ? 'pb-4 pt-1' : 'pb-10 pt-1'}`}>
-            {error && <p className="text-red-500/60 font-medium">{error}</p>}
+            {error && <p className="text-red-500/60 font-medium px-4 text-center">{error}</p>}
           </div>
       </>
     )
