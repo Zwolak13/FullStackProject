@@ -2,6 +2,7 @@ import Logo from "./Logo";
 import { useInput } from "../hooks/useInput";
 import Input from "./Input";
 import { useState, useEffect } from "react";
+import RegisterPopup from "./RegisterPopup.jsx";
 
 export default function SignupForm({onClick, isLoading}){
 
@@ -51,9 +52,9 @@ export default function SignupForm({onClick, isLoading}){
 
             if(response.ok){
                 popupAnimation('success');
-            } else {
+            } else if (response.status === 409) {
                 console.error('Registration failed:', await response.text());
-                popupAnimation('fail');
+                popupAnimation('conflict');
             }
         } catch (err) {
             console.error('Registration error:', err);
@@ -121,15 +122,7 @@ export default function SignupForm({onClick, isLoading}){
                 <button type="submit" disabled={isRegistered.component} className="mt-10 bg-secondary-dark w-50 h-8 rounded-2xl text-white font-bold" >Sign Up</button>
                 <p>You already have account? <button type="button" onClick={onClick} disabled={isLoading} className="text-primiary-dark font-bold hover:underline">login</button></p>
             </form>
-            {isRegistered.component && isRegistered.popup === 'success' ?
-                <div className={`-z-10 bg-primary-light/50 px-5 py-5 absolute top-10 -translate-y-30 transition duration-500 ease-in-out ${isRegistered.animation && 'translate-y-0'}`}>
-                    <p>Your account has been created successfully. You can now log in</p>
-                </div>
-                :
-                <div className={`-z-10 bg-red-500/30 px-5 py-5 absolute top-10 -translate-y-30 transition duration-500 ease-in-out ${isRegistered.animation && 'translate-y-0'}`}>
-                    <p>Failed to create account. Please try again later.</p>
-                </div>
-            }
+            {isRegistered.component && <RegisterPopup type={isRegistered.popup} animate={isRegistered.animation}/> }
         </>
     )
 }
