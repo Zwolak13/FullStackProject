@@ -25,7 +25,7 @@ public class UserController {
     // Rejestracja nowego użytkownika
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
-        Optional<User> existingUser = userService.findByUsername(user.getUsername());
+        Optional<User> existingUser = userService.findByEmail(user.getEmail());
         if (existingUser.isPresent()) {
             return new ResponseEntity<>("Username already exists", HttpStatus.CONFLICT);
         }

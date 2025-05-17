@@ -17,11 +17,18 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final CustomUserDetailsService userDetailsService; // Twój serwis ładujący usera z DB
+    private final CustomUserDetailsService userDetailsService;
 
     public JwtFilter(JwtUtil jwtUtil, CustomUserDetailsService userDetailsService) {
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        // Skip JWT filter for registration and login endpoints
+        String path = request.getServletPath();
+        return path.equals("/api/users/register") || path.equals("/api/users/login");
     }
 
     @Override
@@ -37,10 +44,14 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             jwtToken = authHeader.substring(7);
-            username = jwtUtil.extractUsername(jwtToken);
+            try {
+                username = jwtUtil.extractUsername(jwtToken);
+            } catch (Exception e) {
+                // Log exception but don't block the request
+            }
         }
 
-        // Jeśli jest username i nie jest jeszcze uwierzytelniony w kontekście
+        // If username exists and not already authenticated
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             var userDetails = userDetailsService.loadUserByUsername(username);
 
