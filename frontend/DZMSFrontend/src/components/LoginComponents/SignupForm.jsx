@@ -1,17 +1,20 @@
 
 import Logo from "./Logo";
+import LOADING_GIF from '../../assets/loading.gif';
 import { useInput } from "../hooks/useInput";
 import Input from "./Input";
 import { useState, useEffect } from "react";
 import RegisterPopup from "./RegisterPopup.jsx";
 
-export default function SignupForm({onClick, isLoading}){
+export default function SignupForm({onClick}){
 
     const [isRegistered,setIsRegistered] = useState({
         component: false,
         animation: false,
         popup: '',
     });
+
+    const [waitingResponse,setWaitingResponse] = useState(false);
 
     const {value: emailValue, handleInputChange: handleEmailChange, handleInputBlur:handleEmailBlur, hasError:emailIsInvalid} = useInput('',(value)=>{
         return value.includes('@') && (value.endsWith('.com') || value.endsWith('.pl'));
@@ -32,17 +35,21 @@ export default function SignupForm({onClick, isLoading}){
 
     async function handleRegistration(event) {
         event.preventDefault();
+
+        if (waitingResponse) return;
+
         if ((emailIsInvalid || passwordIsInvalid || confirmPasswordIsInvalid)
             ||
             (passwordValue ==='' && emailValue ==='' && confirmPasswordValue === '')) {
             return;
         }
 
-        // Fix: Use proper field names expected by your backend
         const payload = {
             email: emailValue,
             password: passwordValue
         };
+
+        setWaitingResponse(true);
 
         try{
             const response = await fetch('http://localhost:8080/api/users/register', {
@@ -61,6 +68,7 @@ export default function SignupForm({onClick, isLoading}){
             console.error('Registration error:', err);
             popupAnimation('fail');
         }
+        setWaitingResponse(false);
     }
 
     function popupAnimation(whichPopup) {
@@ -94,7 +102,7 @@ export default function SignupForm({onClick, isLoading}){
                 component: false,
                 popup: '',
             }));
-        }, 2200); // dopasowane do długości animacji
+        }, 2200); 
 
 
         return () => {
@@ -120,8 +128,8 @@ export default function SignupForm({onClick, isLoading}){
                 <Input type="password" name="confirmPassword" placeholder="Confirm Password" className=" px-2 w-100 h-12 rounded-2xl bg-primary-light/50 "
                        onChange={handleConfirmPasswordChange} value={confirmPasswordValue} onBlur={handleConfirmPasswordBlur}
                        error={confirmPasswordIsInvalid && 'Passwords must match.'}/>
-                <button type="submit" disabled={isRegistered.component} className="mt-10 bg-secondary-dark w-50 h-8 rounded-2xl text-white font-bold" >Sign Up</button>
-                <p>You already have account? <button type="button" onClick={onClick} disabled={isLoading} className="text-primiary-dark font-bold hover:underline">login</button></p>
+                <button type="submit" disabled={isRegistered.component} className="mt-10 bg-secondary-dark w-50 h-8 rounded-2xl text-white font-bold flex justify-center items-center" >{waitingResponse ? <img className="w-7" src={LOADING_GIF} /> : "Sign in"}</button>
+                <p>You already have account? <button type="button" onClick={onClick} disabled={waitingResponse} className="text-primiary-dark font-bold hover:underline">login</button></p>
             </form>
             {isRegistered.component && <RegisterPopup type={isRegistered.popup} animate={isRegistered.animation}/> }
         </>
