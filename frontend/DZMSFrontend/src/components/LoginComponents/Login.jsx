@@ -1,14 +1,62 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import LoginForm from './LoginForm';
 import LeftSideBanerLogin from './LeftSideBanerLogin';
 import SignupForm from './SignupForm';
 
-export default function Login(){
+export default function Login({succesfullLogin, ...props}){
     const [isLoading,setIsLoading] = useState(false);
     const [direction, setDirection] = useState('up');
     const [whichForm,setWhichForm]  = useState('login');
+
+     const [isWaiting,setIsWaiting] = useState({
+        component: false,
+        animation: false,
+        popup: '',
+    });
+
+    function popupAnimation(whichPopup) {
+            setIsWaiting({
+                component: true,
+                animation: false,
+                popup: whichPopup,
+            });
+        }
+    
+        useEffect(() => {
+            if (!isWaiting.component) return;
+    
+            const animateInTimeout = setTimeout(() => {
+                setIsWaiting(prev => ({
+                    ...prev,
+                    animation: true,
+                }));
+            }, 100);
+    
+            const animateOutTimeout = setTimeout(() => {
+                setIsWaiting(prev => ({
+                    ...prev,
+                    animation: false,
+                }));
+            }, 2000);
+    
+            const hideComponentTimeout = setTimeout(() => {
+                setIsWaiting(prev => ({
+                    ...prev,
+                    component: false,
+                    popup: '',
+                }));
+            }, 2200); 
+    
+    
+            return () => {
+                clearTimeout(animateInTimeout);
+                clearTimeout(animateOutTimeout);
+                clearTimeout(hideComponentTimeout);
+            };
+        }, [isWaiting.component]);
+    
 
 
 
@@ -26,14 +74,8 @@ export default function Login(){
 
 
     return(
-        <main  className="flex items-center justify-center min-h-screen">
-            <div className="w-screen h-screen  flex flex-row overflow-hidden">
-                <div id='rightSide' className="hidden  lg:w-1/2 bg-gradient-to-br from-primiary-dark to-secondary-dark text-white lg:flex flex-col justify-center items-center relative">
-                    <LeftSideBanerLogin onSignup={handleSignupForm} isDisabled={whichForm} isLoading={isLoading}/>
-                </div>
-                <div id='leftSide' className={`flex w-screen flex-col justify-center items-center lg:w-1/2 relative ${isLoading && 'active'}}`} >
-                     <div
-                        className={`
+        <div {...props}>
+        <div className={`
                         absolute inset-0 bg-gradient-to-r from-primiary-dark to-secondary-dark
                         transition-transform duration-700 ease-in-out pointer-events-none
                         ${isLoading
@@ -46,11 +88,7 @@ export default function Login(){
                         }
                         `}
                     />
-
-
-                    {whichForm === 'login' ? <LoginForm isLoading={isLoading} onChange={handleSignupForm}/> : <SignupForm  isLoading={isLoading} onClick={handleSignupForm}/>}
-                </div>
-            </div>
-        </main>
+                {whichForm === 'login' ? <LoginForm  onChange={handleSignupForm} isLogin={isWaiting} popupAnimation={popupAnimation} succesfullLogin={succesfullLogin}/> : <SignupForm   onClick={handleSignupForm} isRegistered={isWaiting} popupAnimation={popupAnimation}/>}
+        </div>
     )
 }

@@ -1,18 +1,13 @@
 
-import Logo from "./Logo";
+import Logo from "../Logo.jsx";
 import LOADING_GIF from '../../assets/loading.gif';
 import { useInput } from "../hooks/useInput";
 import Input from "./Input";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import RegisterPopup from "./RegisterPopup.jsx";
 
-export default function SignupForm({onClick}){
+export default function SignupForm({onClick, isRegistered, popupAnimation}){
 
-    const [isRegistered,setIsRegistered] = useState({
-        component: false,
-        animation: false,
-        popup: '',
-    });
 
     const [waitingResponse,setWaitingResponse] = useState(false);
 
@@ -64,54 +59,13 @@ export default function SignupForm({onClick}){
                 console.error('Registration failed:', await response.text());
                 popupAnimation('conflict');
             }
-        } catch (err) {
-            console.error('Registration error:', err);
+        } catch {
             popupAnimation('fail');
         }
         setWaitingResponse(false);
     }
 
-    function popupAnimation(whichPopup) {
-        setIsRegistered({
-            component: true,
-            animation: false,
-            popup: whichPopup,
-        });
-    }
-
-    useEffect(() => {
-        if (!isRegistered.component) return;
-
-        const animateInTimeout = setTimeout(() => {
-            setIsRegistered(prev => ({
-                ...prev,
-                animation: true,
-            }));
-        }, 100);
-
-        const animateOutTimeout = setTimeout(() => {
-            setIsRegistered(prev => ({
-                ...prev,
-                animation: false,
-            }));
-        }, 2000);
-
-        const hideComponentTimeout = setTimeout(() => {
-            setIsRegistered(prev => ({
-                ...prev,
-                component: false,
-                popup: '',
-            }));
-        }, 2200); 
-
-
-        return () => {
-            clearTimeout(animateInTimeout);
-            clearTimeout(animateOutTimeout);
-            clearTimeout(hideComponentTimeout);
-        };
-    }, [isRegistered.component]);
-
+    
 
     return (
         <>
@@ -128,8 +82,8 @@ export default function SignupForm({onClick}){
                 <Input type="password" name="confirmPassword" placeholder="Confirm Password" className=" px-2 w-100 h-12 rounded-2xl bg-primary-light/50 "
                        onChange={handleConfirmPasswordChange} value={confirmPasswordValue} onBlur={handleConfirmPasswordBlur}
                        error={confirmPasswordIsInvalid && 'Passwords must match.'}/>
-                <button type="submit" disabled={isRegistered.component} className="mt-10 bg-secondary-dark w-50 h-8 rounded-2xl text-white font-bold flex justify-center items-center" >{waitingResponse ? <img className="w-7" src={LOADING_GIF} /> : "Sign in"}</button>
-                <p>You already have account? <button type="button" onClick={onClick} disabled={waitingResponse} className="text-primiary-dark font-bold hover:underline">login</button></p>
+                <button type="submit" className="bg-secondary-dark w-50 h-10 rounded-2xl text-white font-bold  hover:bg-white hover:text-secondary-dark hover:border-2 border-secondary-dark flex justify-center items-center"  >{waitingResponse ? <img className="w-7" src={LOADING_GIF} /> : "Sign in"}</button>
+                <p>You already have account? <button type="button" onClick={onClick}  className="text-primiary-dark font-bold hover:underline">login</button></p>
             </form>
             {isRegistered.component && <RegisterPopup type={isRegistered.popup} animate={isRegistered.animation}/> }
         </>
