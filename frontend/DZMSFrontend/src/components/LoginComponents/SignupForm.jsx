@@ -6,7 +6,7 @@ import Input from "./Input";
 import { useState } from "react";
 import RegisterPopup from "./RegisterPopup.jsx";
 
-export default function SignupForm({onClick, isRegistered, popupAnimation}){
+export default function SignupForm({onClick, isRegistered, popupAnimation, isLoading}){
 
 
     const [waitingResponse,setWaitingResponse] = useState(false);
@@ -83,7 +83,7 @@ export default function SignupForm({onClick, isRegistered, popupAnimation}){
                        onChange={handleConfirmPasswordChange} value={confirmPasswordValue} onBlur={handleConfirmPasswordBlur}
                        error={confirmPasswordIsInvalid && 'Passwords must match.'}/>
                 <button type="submit" className="bg-secondary-dark w-50 h-10 rounded-2xl text-white font-bold  hover:bg-white hover:text-secondary-dark hover:border-2 border-secondary-dark flex justify-center items-center"  >{waitingResponse ? <img className="w-7" src={LOADING_GIF} /> : "Sign in"}</button>
-                <p>You already have account? <button type="button" onClick={onClick} disabled={isRegistered} className="text-primiary-dark font-bold hover:underline">login</button></p>
+                <p>You already have account? <button type="button" onClick={onClick} disabled={isLoading} className="text-primiary-dark font-bold hover:underline">login</button></p>
             </form>
             {isRegistered.component && <RegisterPopup type={isRegistered.popup} animate={isRegistered.animation}/> }
         </>

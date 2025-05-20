@@ -88,9 +88,9 @@ export default function Login({succesfullLogin, ...props}){
                         }
                         `}
                     />
-                {whichForm === 'login' ? <LoginForm  onChange={handleSignupForm} isLogin={isLoading} popupAnimation={popupAnimation} succesfullLogin={succesfullLogin}/> 
+                {whichForm === 'login' ? <LoginForm  onChange={handleSignupForm} isLogin={isWaiting} popupAnimation={popupAnimation} succesfullLogin={succesfullLogin} isLoading={isLoading}/> 
                 :
-                 <SignupForm   onClick={handleSignupForm} isRegistered={isLoading} popupAnimation={popupAnimation}/>}
+                 <SignupForm   onClick={handleSignupForm} isRegistered={isWaiting} popupAnimation={popupAnimation} isLoading={isLoading}/>}
         </div>
     )
 }
