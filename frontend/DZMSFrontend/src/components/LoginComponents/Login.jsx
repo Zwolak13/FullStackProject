@@ -76,7 +76,7 @@ export default function Login({succesfullLogin, ...props}){
     return(
         <div {...props}>
         <div className={`
-                        absolute inset-0 bg-gradient-to-r from-primiary-dark to-secondary-dark
+                        absolute inset-0 bg-gradient-to-r w-screen from-primiary-dark to-secondary-dark
                         transition-transform duration-700 ease-in-out pointer-events-none
                         ${isLoading
                             ? direction === 'up'
@@ -88,7 +88,9 @@ export default function Login({succesfullLogin, ...props}){
                         }
                         `}
                     />
-                {whichForm === 'login' ? <LoginForm  onChange={handleSignupForm} isLogin={isWaiting} popupAnimation={popupAnimation} succesfullLogin={succesfullLogin}/> : <SignupForm   onClick={handleSignupForm} isRegistered={isWaiting} popupAnimation={popupAnimation}/>}
+                {whichForm === 'login' ? <LoginForm  onChange={handleSignupForm} isLogin={isLoading} popupAnimation={popupAnimation} succesfullLogin={succesfullLogin}/> 
+                :
+                 <SignupForm   onClick={handleSignupForm} isRegistered={isLoading} popupAnimation={popupAnimation}/>}
         </div>
     )
 }
