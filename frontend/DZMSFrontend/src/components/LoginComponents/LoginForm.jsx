@@ -18,6 +18,7 @@ export default function LoginForm({onChange, popupAnimation, isLogin, succesfull
         setWaitingResponse(true);
 
         if (passwordValue ==='' && emailValue ==='') {
+            setWaitingResponse(false);
             return;
         }
 

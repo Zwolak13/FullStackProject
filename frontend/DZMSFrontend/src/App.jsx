@@ -66,7 +66,7 @@ function App() {
                         <LeftSideBanerLogin className={`lg:flex flex-col justify-center items-center relative transition  duration-500 ${hideDom ? 'opacity-0' : 'opacity-100'}`}/>
                         }
                     </div>
-                    <div id='rightSide' className={`flex justify-center transition-all duration-1000 lg:w-1/2 relative ${changeDom ? 'lg:w-5/6' : 'lg:w-1/2' }`} >
+                    <div id='rightSide' className={`flex justify-center transition-all w-screen duration-1000 lg:w-1/2 relative ${changeDom ? 'lg:w-5/6' : 'lg:w-1/2' }`} >
                          {changeDom ?
                          <TMP succesfullLoginDOM={setSuccesfullLogin}/>
                         :
