@@ -44,9 +44,9 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody User loginRequest) {
-        Optional<User> user = userService.authenticate(loginRequest.getUsername(), loginRequest.getPassword());
+        Optional<User> user = userService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
         if (user.isPresent()) {
-            String token = jwtUtil.generateToken(loginRequest.getUsername());
+            String token = jwtUtil.generateToken(loginRequest.getEmail());
             return ResponseEntity.ok(token);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
