@@ -23,8 +23,8 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public Optional<User> authenticate(String username, String password) {
-        Optional<User> user = userRepository.findByUsername(username);
+    public Optional<User> authenticate(String email, String password) {
+        Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent() && user.get().getPassword().equals(password)) {
             return user;
         }
