@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-export default function Nav({logout,isMobile,...props}) {
-  const [activeSection, setActiveSection] = useState("shopping");
+export default function Nav({logout,isMobile,closeMenu=()=>{},activeSection,setActiveSection,...props}) {
+  
 
   function handleClick(id){
     setActiveSection(id)
@@ -10,6 +10,7 @@ export default function Nav({logout,isMobile,...props}) {
    function handleLogout(){
         logout(false);
     }
+    
 
   const navItems = [
     { id: "shopping", label: "Shopping Lists", icon: (
@@ -35,7 +36,10 @@ export default function Nav({logout,isMobile,...props}) {
       {navItems.map((item) => (
         <button
           key={item.id}
-          onClick={() => handleClick(item.id)}
+          onClick={() => {
+              handleClick(item.id);
+              if (isMobile) closeMenu();
+            }}
           className={`w-full flex items-center px-4 py-4 transition-all duration-500  ${
             activeSection === item.id ? "bg-white/20" : "hover:bg-primary-light"
           }`}
@@ -47,7 +51,9 @@ export default function Nav({logout,isMobile,...props}) {
     {isMobile ? 
     <>
     <button
-          onClick={() => handleClick(999)}
+          onClick={() => {handleClick(999)
+              if (isMobile) closeMenu();
+          }}
           className={`w-full flex items-center px-4 py-4 transition-all duration-500  ${
             activeSection === 999 ? "bg-white/20" : "hover:bg-primary-light"
           }`}
@@ -66,9 +72,8 @@ export default function Nav({logout,isMobile,...props}) {
           <span className="font-bold text-[20px]">Settings</span>
     </button>
     <button
-          onClick={() => handleClick(997)}
-          className={`w-full flex items-center px-4 py-4 transition-all duration-500  ${
-            activeSection === 997 ? "bg-white/20" : "hover:bg-primary-light"
+          onClick={handleLogout}
+          className={`w-full flex items-center px-4 py-4 transition-all duration-500 "
           }`}
         >
           <svg
