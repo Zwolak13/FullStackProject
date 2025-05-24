@@ -12,9 +12,11 @@ function App() {
   
   const [firstLoadFlag,setFirstLoadFlag] = useState(false); 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const [activeSection, setActiveSection] = useState(() => {
     return localStorage.getItem('activeSection') || "shopping";
   });
+
   
 
   const [succesfullLoginDOM,setSuccesfullLogin] = useState(false);
@@ -105,7 +107,7 @@ function App() {
 
   return (
     <main  className="flex items-center justify-center min-h-screen">
-                <div className="w-screen h-screen  flex flex-row overflow-y-auto">
+                <div className="w-screen h-screen  flex flex-row hide-scrollbar overflow-y-auto">
                     <div id='leftSide' className={`sticky top-0 sticky hidden transition-all  duration-1000   bg-gradient-to-br from-primiary-dark to-secondary-dark text-white lg:flex 
                     flex-col justify-center  items-center relative  ${changeDom ? 'lg:w-1/6 lg:justify-end' : 'lg:w-1/2' }`}>
                         <Logo isHidden={hideDom ? true : null} className={`absolute transition-all duration-500 ${hideDom ? 'w-25 top-[0px]' : 'w-48 top-25'}`}/>
@@ -141,7 +143,7 @@ function App() {
                         ${isMobileMenuOpen ? 'scale-5000' : 'scale-100'}`} />
 
                          {changeDom ?
-                          <Workspace className={`w-full transition  duration-500 ${delay ? 'opacity-0' : 'opacity-100'}`}/>
+                          <Workspace  className={`w-full transition  duration-500 ${delay ? 'opacity-0' : 'opacity-100'}`}/>
                         :
                         <Login succesfullLogin={setSuccesfullLogin} className={`flex flex-col justify-center items-center  relative w-full transition  duration-500 ${hideDom ? 'opacity-0' : 'opacity-100'}`} />
                         }

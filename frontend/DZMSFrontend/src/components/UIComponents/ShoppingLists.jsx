@@ -1,6 +1,6 @@
 import { useState, useRef,useEffect } from "react";
 
-export default function ShoppingLists(){
+export default function ShoppingLists({changeWorkspace}){
      const [openMenuId, setOpenMenuId] = useState(null);
      const menuRef = useRef(null);
 
@@ -40,62 +40,62 @@ export default function ShoppingLists(){
         description: 'today shop list'
     },
 {
-        id: 4,
+        id: 5,
         title: "Today",
         due: '22.05.2025',
         description: 'today shop list'
     },{
-        id: 4,
+        id: 6,
         title: "Today",
         due: '22.05.2025',
         description: 'today shop list'
     },{
-        id: 4,
+        id: 7,
         title: "Today",
         due: '22.05.2025',
         description: 'today shop list'
     },{
-        id: 4,
+        id: 8,
         title: "Today",
         due: '22.05.2025',
         description: 'today shop list'
     },{
-        id: 4,
+        id: 9,
         title: "Today",
         due: '22.05.2025',
         description: 'today shop list'
     },{
-        id: 4,
+        id: 11,
         title: "Today",
         due: '22.05.2025',
         description: 'today shop list'
     },{
-        id: 4,
+        id: 12,
         title: "Today",
         due: '22.05.2025',
         description: 'today shop list'
     },{
-        id: 4,
+        id: 13,
         title: "Today",
         due: '22.05.2025',
         description: 'today shop list'
     },{
-        id: 4,
+        id: 14,
         title: "Today",
         due: '22.05.2025',
         description: 'today shop list'
     },{
-        id: 4,
+        id: 16,
         title: "Today",
         due: '22.05.2025',
         description: 'today shop list'
     },{
-        id: 4,
+        id: 15,
         title: "Today",
         due: '22.05.2025',
         description: 'today shop list'
     },{
-        id: 4,
+        id: 18,
         title: "Today",
         due: '22.05.2025',
         description: 'today shop list'
@@ -106,6 +106,13 @@ export default function ShoppingLists(){
   <h1 className="text-4xl font-bold">Your Lists</h1>
   <hr className="w-1/4 bg-primary-light/40 h-1 border-0 mt-2 mb-5" />
   <div className="grid gap-6 pb-6 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
+
+    <div className="bg-gray-400/20 min-h-[200px] rounded-xl shadow-xl  w-full relative border-dashed border-2 border-gray-400/20">
+      <button className="w-full h-full" onClick={() => changeWorkspace('addForm')}>
+         <span className="text-5xl text-gray-400/80">+</span>
+      </button>
+    </div>
+
     {list.map(item => (
       <div
         key={item.id}
@@ -146,6 +153,7 @@ export default function ShoppingLists(){
         </div>
       </div>
     ))}
+    
   </div>
 </div>
 
