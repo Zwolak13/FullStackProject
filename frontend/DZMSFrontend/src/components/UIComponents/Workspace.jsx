@@ -14,7 +14,7 @@ export default function Workspace({...props}){
         const falseDelay = setTimeout(()=>{
             setFancyDelay(false);
             setVisibleWorkspace(activeWorkspace);
-        },1000)
+        },500)
         return () =>{
             clearTimeout(falseDelay);
         }
@@ -31,7 +31,7 @@ let workspaceContent;
 
     return (
         <main {...props}>
-            <div className={`transition-all duration-500 ${fancyDelay ? 'opacity-0' : 'opacity-100'}`}>
+            <div className={`transition-all duration-300 ${fancyDelay ? 'opacity-0' : 'opacity-100'}`}>
                 {workspaceContent}
             </div>
         </main>
