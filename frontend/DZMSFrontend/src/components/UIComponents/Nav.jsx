@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 export default function Nav({logout,isMobile,closeMenu=()=>{},activeSection,setActiveSection,...props}) {
   
 
@@ -7,9 +5,21 @@ export default function Nav({logout,isMobile,closeMenu=()=>{},activeSection,setA
     setActiveSection(id)
   }
 
-   function handleLogout(){
-        logout(false);
+   async function handleLogout() {
+  try {
+    const res = await fetch('http://localhost:8080/api/users/logout', {
+      method: 'POST',
+      credentials: 'include', 
+    });
+
+    if (!res.ok) {
+      throw new Error('Wylogowanie nie powiodło się');
     }
+    logout(false); 
+  } catch (err) {
+    console.error('Błąd wylogowania:', err);
+  }
+}
     
 
   const navItems = [

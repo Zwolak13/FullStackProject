@@ -1,16 +1,69 @@
 import Input from "../LoginComponents/Input";
 import { useInput } from "../hooks/useInput";
-import { useState } from "react";
-import shoppingItems from "../testingValues/shoppingitems";
+import { useState, useEffect } from "react";
+import { useLists } from '../Context/ActiveListContext';
 
 export default function AddListForm({goBackToList}){
+
+    const { addList, error:addError} = useLists();
 
     const {value: titleValue, handleInputChange: handleTitleChange} = useInput('');
     const {value: dateValue, handleInputChange: handleDateChange} = useInput('');
     const {value: descriptionValue, handleInputChange: handleDescriptionChange} = useInput('');
 
     const [selectedItems, setSelectedItems] = useState([]);
+    const [shoppingItems,setShoppingItems] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
+    async function handleAddingList(event) {
+        event.preventDefault();
+
+        if (titleValue === '' || descriptionValue === '' || selectedItems.length === 0) return;
+
+        const itemsWithNullId = selectedItems.map(({ name, price, quantity }) => ({
+            id: null,
+            name,
+            price,
+            quantity
+        }));
+
+        const payload = {
+            name: titleValue,
+            description: descriptionValue,
+            dueDate: dateValue,
+            completed: false,
+            items: itemsWithNullId,
+        };
+
+        console.log("Original selectedItems:", selectedItems);
+        console.log("Items count:", selectedItems.length);
+        console.log("Sample item:", selectedItems[0]);
+        console.log("Payload size (chars):", JSON.stringify(payload).length);
+
+        addList(payload);
+    }
+
+    useEffect(() => {
+    async function fetchAvailableItems() {
+      setLoading(true);
+      try {
+        const res = await fetch('http://localhost:8080/api/available-items',{
+            method: "GET",
+            credentials: 'include',
+        });
+        if (!res.ok) throw new Error('Błąd pobierania dostępnych przedmiotów');
+        const data = await res.json();
+        setShoppingItems(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchAvailableItems();
+    }, []);
 
     const handleCheckboxChange = (item) => {
         setSelectedItems(prev => {
@@ -43,12 +96,7 @@ export default function AddListForm({goBackToList}){
     };
 
 
-    function handleAddingList(event){
-        event.preventDefault();
-        console.log(titleValue + " " + dateValue + " " + descriptionValue)
 
-        if(titleValue === '' || dateValue === '' || descriptionValue === '' || selectedItems.length === 0) return;
-    }
     
     return (
         <div className="w-full px-4 ">
@@ -80,25 +128,50 @@ export default function AddListForm({goBackToList}){
                         </tr>
                         </thead>
                         <tbody>
-                        {shoppingItems
-                        .slice() 
-                        .sort((a, b) => a.name.localeCompare(b.name))
-                        .filter(item => !selectedItems.some(p => p.id === item.id)) 
-                        .map((item) => (
-                            <tr key={item.id} className="h-12 even:bg-gray-50 hover:bg-gray-100 transition">
-                            <td className="px-4 py-2">{item.name}</td>
-                            <td className="px-4 py-2">{item.price.toFixed(2)}</td>
-                            <td className="px-4 py-2 text-center">
-                                <input
-                                type="checkbox"
-                                checked={selectedItems.some(p => p.id === item.id)}
-                                onChange={() => handleCheckboxChange(item)}
-                                className="accent-blue-500 w-5 h-5"
-                                />
-                            </td>
-                            </tr>
-                        ))}
-                        </tbody>
+                            {loading ? (
+                                <tr>
+                                <td colSpan={3} className="text-center italic text-gray-500 py-4">
+                                    Fetching Items...
+                                </td>
+                                </tr>
+                            ) : error ? (
+                                <tr>
+                                <td colSpan={3} className="text-center italic text-red-500 py-4">
+                                    {error}
+                                </td>
+                                </tr>
+                            ) : shoppingItems
+                                .slice()
+                                .sort((a, b) => a.name.localeCompare(b.name))
+                                .filter(item => !selectedItems.some(p => p.id === item.id))
+                                .length === 0 ? (
+                                <tr>
+                                <td colSpan={3} className="text-center italic text-gray-500 py-4">
+                                    You have to add product to your list to see them.
+                                </td>
+                                </tr>
+                            ) : (
+                                shoppingItems
+                                .slice()
+                                .sort((a, b) => a.name.localeCompare(b.name))
+                                .filter(item => !selectedItems.some(p => p.id === item.id))
+                                .map((item) => (
+                                    <tr key={item.id} className="h-12 even:bg-gray-50 hover:bg-gray-100 transition">
+                                    <td className="px-4 py-2">{item.name}</td>
+                                    <td className="px-4 py-2">{item.price.toFixed(2)}</td>
+                                    <td className="px-4 py-2 text-center">
+                                        <input
+                                        type="checkbox"
+                                        checked={selectedItems.some(p => p.id === item.id)}
+                                        onChange={() => handleCheckboxChange(item)}
+                                        className="accent-blue-500 w-5 h-5"
+                                        />
+                                    </td>
+                                    </tr>
+                                ))
+                            )}
+                            </tbody>
+
                     </table>
                     </div>
                 </div>
@@ -129,6 +202,7 @@ export default function AddListForm({goBackToList}){
                                     <td className="px-4 py-2">{(item.price*item.quantity).toFixed(2)}</td>
                                     <td className="px-4 py-2 flex items-center justify-center space-x-2">
                                         <button 
+                                        type="button"
                                         onClick={() => decrementQuantity(item.id)} 
                                         className="px-2 py-1 bg-gray-300 rounded hover:bg-gray-400"
                                         aria-label="Decrease quantity"
@@ -137,6 +211,7 @@ export default function AddListForm({goBackToList}){
                                         </button>
                                         <span>{item.quantity}</span>
                                         <button 
+                                        type="button"
                                         onClick={() => incrementQuantity(item.id)} 
                                         className="px-2 py-1 bg-gray-300 rounded hover:bg-gray-400"
                                         aria-label="Increase quantity"

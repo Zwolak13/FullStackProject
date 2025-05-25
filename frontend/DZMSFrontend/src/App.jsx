@@ -25,6 +25,28 @@ function App() {
   const [changeDom, setChangeDom] = useState(false);
 
   useEffect(() => {
+  async function checkAuth() {
+    try {
+      const res = await fetch('http://localhost:8080/api/users/me', {
+        credentials: 'include',
+      });
+
+      if (res.ok) {
+        // ustaw użytkownika w stanie globalnym, np. Context lub Redux
+        setSuccesfullLogin(true)
+      } else {
+        // użytkownik nie jest zalogowany
+      }
+    } catch (error) {
+      null;
+    }
+  }
+  checkAuth();
+}, []);
+
+
+
+  useEffect(() => {
     localStorage.setItem('activeSection', activeSection);
   }, [activeSection]);
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import ShoppingLists from "./ShoppingLists";
 import AddListForm from "./AddListForm";
+import { ActiveListsProvider } from "../Context/ActiveListContext";
 
 export default function Workspace({...props}){
 
@@ -21,21 +22,28 @@ export default function Workspace({...props}){
     },[activeWorkspace])
 
 
-let workspaceContent;
-  if (visibleWorkspace === 'shopping') {
-    workspaceContent = <ShoppingLists changeWorkspace={(toWhat) => setActiveWorkspace(toWhat)} />;
-  } else if (visibleWorkspace === 'addForm') {
-    workspaceContent = <AddListForm goBackToList={() => setActiveWorkspace('shopping')} />;
-  }
     
 
     return (
-        <main {...props}>
-            <div className={`transition-all duration-300 ${fancyDelay ? 'opacity-0' : 'opacity-100'}`}>
-                {workspaceContent}
-            </div>
-        </main>
+    <main {...props}>
+      <div className={`transition-all duration-300 ${fancyDelay ? 'opacity-0' : 'opacity-100'}`}>
+        { (visibleWorkspace === 'shopping' || visibleWorkspace === 'addForm') && (
+          <ActiveListsProvider>
+            {visibleWorkspace === 'shopping' ? (
+              <ShoppingLists changeWorkspace={setActiveWorkspace} />
+            ) : (
+              <AddListForm goBackToList={() => setActiveWorkspace('shopping')} />
+            )}
+          </ActiveListsProvider>
+        )}
 
-    )
+        {visibleWorkspace === 'completed' && (
+          <CompletedListsProvider>
+            <CompletedLists changeWorkspace={setActiveWorkspace} />
+          </CompletedListsProvider>
+        )}
+      </div>
+    </main>
+  );
 
 }
