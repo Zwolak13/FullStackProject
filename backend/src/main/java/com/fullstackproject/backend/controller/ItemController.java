@@ -39,11 +39,6 @@ public class ItemController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // 🔹 Wyszukaj itemy po typie (type)
-    @GetMapping("/type/{type}")
-    public ResponseEntity<List<Item>> getItemsByType(@PathVariable String type) {
-        return ResponseEntity.ok(itemService.findByType(type));
-    }
 
     // 🔹 Zaktualizuj item po ID
     @PutMapping("/{id}")
@@ -53,9 +48,7 @@ public class ItemController {
             Item item = existingItem.get();
             item.setName(updatedItem.getName());
             item.setQuantity(updatedItem.getQuantity());
-            item.setUnit(updatedItem.getUnit());
-            item.setUnitPrice(updatedItem.getUnitPrice());
-            item.setType(updatedItem.getType());
+            item.setPrice(updatedItem.getPrice());
 
             return ResponseEntity.ok(itemService.saveItem(item));
         } else {

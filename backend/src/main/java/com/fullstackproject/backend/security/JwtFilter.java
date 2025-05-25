@@ -3,6 +3,7 @@ package com.fullstackproject.backend.security;
 import com.fullstackproject.backend.service.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,23 +38,37 @@ public class JwtFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        final String authHeader = request.getHeader("Authorization");
-
-        String username = null;
         String jwtToken = null;
+        String email = null;
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            jwtToken = authHeader.substring(7);
-            try {
-                username = jwtUtil.extractUsername(jwtToken);
-            } catch (Exception e) {
-                // Log exception but don't block the request
+        // 1. Pobierz token JWT tylko z ciasteczka
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("jwt".equals(cookie.getName())) {
+                    jwtToken = cookie.getValue();
+                    break;
+                }
             }
         }
 
-        // If username exists and not already authenticated
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            var userDetails = userDetailsService.loadUserByUsername(username);
+        // 🔍 DEBUG TU!
+        System.out.println("========== JWT DEBUG ==========");
+        System.out.println("Cookie JWT: " + jwtToken);
+
+        if (jwtToken != null) {
+            try {
+                email = jwtUtil.extractUsername(jwtToken);
+            } catch (Exception e) {
+                System.out.println("Błąd przy parsowaniu tokena: " + e.getMessage());
+            }
+        }
+
+        System.out.println("Email z tokena: " + email);
+        System.out.println("Auth w kontekście: " + SecurityContextHolder.getContext().getAuthentication());
+        System.out.println("================================");
+
+        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            var userDetails = userDetailsService.loadUserByUsername(email);
 
             if (jwtUtil.validateToken(jwtToken, userDetails)) {
                 var authToken = new UsernamePasswordAuthenticationToken(
@@ -61,9 +76,18 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+
+                System.out.println("Ustawiono autentykację w kontekście!");
+            } else {
+                System.out.println("Token JWT NIEPRZESZEDŁ walidacji.");
             }
         }
 
+        // 4. Kontynuuj przetwarzanie żądania
         filterChain.doFilter(request, response);
     }
+
+
+
+
 }

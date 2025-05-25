@@ -1,5 +1,6 @@
 package com.fullstackproject.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -18,28 +19,23 @@ public class Item {
     @Column(nullable = false)
     private int quantity;
 
-    @Column(nullable = false)
-    private String unit; // "kg", "szt", "l", itd.
+
 
     @Column(nullable = false)
-    private String type;
+    private BigDecimal price;
 
-    @Column(nullable = false)
-    private BigDecimal unitPrice;
-
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shopping_list_id")
     private ShoppingList shoppingList;
 
     public Item() {}
 
-    public Item(Long id, String name, int quantity, String unit, String type, BigDecimal unitPrice, ShoppingList shoppingList) {
-        this.id = id;
+    public Item(String name, int quantity, BigDecimal price, ShoppingList shoppingList) {
+
         this.name = name;
         this.quantity = quantity;
-        this.unit = unit;
-        this.type = type;
-        this.unitPrice = unitPrice;
+        this.price = price;
         this.shoppingList = shoppingList;
     }
 
@@ -69,28 +65,14 @@ public class Item {
         this.quantity = quantity;
     }
 
-    public String getUnit() {
-        return unit;
+
+
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public BigDecimal getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(BigDecimal unitPrice) {
-        this.unitPrice = unitPrice;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     public ShoppingList getShoppingList() {
@@ -102,7 +84,7 @@ public class Item {
     }
 
     public BigDecimal getTotalPrice() {
-        return unitPrice.multiply(BigDecimal.valueOf(quantity));
+        return price.multiply(BigDecimal.valueOf(quantity));
     }
 }
 

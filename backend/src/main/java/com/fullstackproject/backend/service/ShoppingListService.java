@@ -1,6 +1,7 @@
 package com.fullstackproject.backend.service;
 
 import com.fullstackproject.backend.model.ShoppingList;
+import com.fullstackproject.backend.model.User;
 import com.fullstackproject.backend.repository.ShoppingListRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,18 +13,21 @@ import java.util.Optional;
 public class ShoppingListService {
 
     private final ShoppingListRepository shoppingListRepository;
+    private final UserService userService;
 
-    // Konstruktor do wstrzykiwania repozytorium
-    public ShoppingListService(ShoppingListRepository shoppingListRepository) {
+    public ShoppingListService(ShoppingListRepository shoppingListRepository, UserService userService) {
         this.shoppingListRepository = shoppingListRepository;
+        this.userService = userService;
     }
 
     // Zapisz nowy ShoppingList
     public ShoppingList saveShoppingList(ShoppingList shoppingList) {
         BigDecimal totalPrice = shoppingList.getItems().stream()
-                .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
+        User currentUser = userService.getCurrentUser();
+        shoppingList.setUser(currentUser);
         shoppingList.setPrice(totalPrice);
         return shoppingListRepository.save(shoppingList);
     }
@@ -48,6 +52,10 @@ public class ShoppingListService {
     // Usuń ShoppingList po ID
     public void deleteById(Long id) {
         shoppingListRepository.deleteById(id);
+    }
+
+    public List<ShoppingList> findByUserId(Long userId) {
+        return shoppingListRepository.findByUserId(userId);
     }
 
     // Pobierz wszystkie ShoppingListy
