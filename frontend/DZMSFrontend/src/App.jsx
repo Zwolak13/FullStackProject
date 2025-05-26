@@ -32,17 +32,20 @@ function App() {
       });
 
       if (res.ok) {
-        // ustaw użytkownika w stanie globalnym, np. Context lub Redux
-        setSuccesfullLogin(true)
+        setSuccesfullLogin(true); 
       } else {
-        // użytkownik nie jest zalogowany
+        setSuccesfullLogin(false); 
       }
     } catch (error) {
-      null;
+      setSuccesfullLogin(false); 
     }
   }
+
   checkAuth();
+  const interval = setInterval(checkAuth, 30000);
+  return () => clearInterval(interval);
 }, []);
+
 
 
 

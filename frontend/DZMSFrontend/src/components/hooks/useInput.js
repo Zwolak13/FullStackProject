@@ -9,17 +9,23 @@ export function useInput(defaultValue,validation = () =>{}){
 
     function handleInputChange(event){
         setEnteredValue(event.target.value);
-        setDidEdit(false)
+        setDidEdit(false);
     }
 
     function handleInputBlur(){
         setDidEdit(true);
     }
 
+    function handleClearValue(){
+        setEnteredValue('');
+        setDidEdit(false);
+    }
+
     return {
         value:enteredValue,
         handleInputBlur,
         handleInputChange,
+        handleClearValue,
         hasError: didEdit && !valueIsValid,
 
     }

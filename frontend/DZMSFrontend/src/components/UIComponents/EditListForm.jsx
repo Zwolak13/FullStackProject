@@ -3,18 +3,27 @@ import { useInput } from "../hooks/useInput";
 import { useState, useEffect } from "react";
 import { useLists } from '../Context/ActiveListContext';
 
-export default function AddListForm({goBackToList}){
+export default function EditListForm({goBackToList,listData}){
 
-    const { addList} = useLists();
+    const { lists, updateList} = useLists();
 
-    const {value: titleValue, handleInputChange: handleTitleChange} = useInput('');
-    const {value: dateValue, handleInputChange: handleDateChange} = useInput('');
-    const {value: descriptionValue, handleInputChange: handleDescriptionChange} = useInput('');
 
-    const [selectedItems, setSelectedItems] = useState([]);
+    const list = lists.find((l) => l.id === listData);
+
+    const {value: titleValue, handleInputChange: handleTitleChange} = useInput(list.name);
+    const {value: dateValue, handleInputChange: handleDateChange} = useInput(list.dueDate);
+    const {value: descriptionValue, handleInputChange: handleDescriptionChange} = useInput(list.description);
+
+
+ 
+
     const [shoppingItems,setShoppingItems] = useState([]);
+    
+    const [selectedItems, setSelectedItems] = useState(list.items);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+
 
     async function handleAddingList(event) {
         event.preventDefault();
@@ -35,7 +44,9 @@ export default function AddListForm({goBackToList}){
             completed: false,
             items: itemsWithNullId,
         };
-        addList(payload);
+
+        updateList(list.id,payload);
+
         goBackToList();
     }
 
@@ -101,7 +112,7 @@ export default function AddListForm({goBackToList}){
                     <path d="M19 12H5" />
                 </svg>
             </button>
-            <h1 className="text-4xl font-bold pt-3 pb-8 flex justify-start items-center lg:block">New Shopping List</h1>
+            <h1 className="text-4xl font-bold pt-3 pb-8 flex justify-start items-center lg:block">Edditing Shopping List</h1>
             <div className=" flex flex-col items-center lg:block">
             <form onSubmit={handleAddingList} className="flex flex-wrap gap-6 pb-6 justify-center">
                 <div className="h-[500px] w-[420px] max-w-full">
@@ -112,7 +123,7 @@ export default function AddListForm({goBackToList}){
                     <textarea maxLength={100}  className=" p-2 w-full h-30 rounded-2xl bg-primary-light/50 resize-none relative" placeholder="Description" onChange={handleDescriptionChange} value={descriptionValue} />
                     <span className={`absolute bottom-5 right-5 font-bold ${descriptionValue.length=== 100 ?'text-red-800' : 'text-yello'}`}>{descriptionValue.length}/100</span> 
                 </div>
-                <button type="submit" className="bg-secondary-dark w-30 mt-10 h-10 rounded-2xl text-white font-bold  hover:bg-white hover:text-secondary-dark hover:border-2 border-secondary-dark flex justify-center items-center absolute top-15 left-100">SAVE</button>
+                <button type="submit" className="bg-secondary-dark w-30 mt-10 h-10 rounded-2xl text-white font-bold  hover:bg-white hover:text-secondary-dark hover:border-2 border-secondary-dark flex justify-center items-center absolute top-15 left-120">SAVE</button>
                 </div>
                 <div className="h-[500px] w-[420px] max-w-full flex justify-center items-center ">
                 <div className="w-full max-w-3xl h-full bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col">
@@ -141,7 +152,9 @@ export default function AddListForm({goBackToList}){
                             ) : shoppingItems
                                 .slice()
                                 .sort((a, b) => a.name.localeCompare(b.name))
-                                .filter(item => !selectedItems.some(p => p.id === item.id))
+                                .filter(item => 
+                                !selectedItems.some(p => p.name.trim().toLowerCase() === item.name.trim().toLowerCase())
+                                )
                                 .length === 0 ? (
                                 <tr>
                                 <td colSpan={3} className="text-center italic text-gray-500 py-4">
@@ -152,7 +165,9 @@ export default function AddListForm({goBackToList}){
                                 shoppingItems
                                 .slice()
                                 .sort((a, b) => a.name.localeCompare(b.name))
-                                .filter(item => !selectedItems.some(p => p.id === item.id))
+                                .filter(item => 
+                                !selectedItems.some(p => p.name.trim().toLowerCase() === item.name.trim().toLowerCase())
+                                )
                                 .map((item) => (
                                     <tr key={item.id} className="h-12 even:bg-gray-50 hover:bg-gray-100 transition">
                                     <td className="px-4 py-2">{item.name}</td>

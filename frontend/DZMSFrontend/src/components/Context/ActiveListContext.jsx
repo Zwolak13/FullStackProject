@@ -39,7 +39,7 @@ export function ActiveListsProvider({ children }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',  
-      body: JSON.stringify(newList)
+        body: JSON.stringify(newList)
       });
       if (!res.ok) throw new Error('Błąd dodawania listy');
       const savedList = await res.json();
@@ -53,9 +53,10 @@ export function ActiveListsProvider({ children }) {
   // 3. Update list
   async function updateList(id, updates) {
     try {
-      const res = await fetch(`/api/shopping-lists/${id}`, {
-        method: 'PUT', // lub PATCH, w zależności od backendu
+      const res = await fetch(`http://localhost:8080/api/shopping-lists/${id}`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(updates),
       });
       if (!res.ok) throw new Error('Błąd aktualizacji listy');
@@ -70,8 +71,9 @@ export function ActiveListsProvider({ children }) {
   // 4. Remove list
   async function removeList(id) {
     try {
-      const res = await fetch(`/api/shopping-lists/${id}`, {
+      const res = await fetch(`http://localhost:8080/api/shopping-lists/${id}`, {
         method: 'DELETE',
+        credentials: 'include',
       });
       if (!res.ok) throw new Error('Błąd usuwania listy');
       setLists(prev => prev.filter(list => list.id !== id));
