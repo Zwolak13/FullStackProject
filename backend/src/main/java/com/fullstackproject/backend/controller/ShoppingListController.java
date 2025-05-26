@@ -57,6 +57,11 @@ public class ShoppingListController {
         return ResponseEntity.ok(shoppingListService.findByMaxPrice(maxPrice));
     }
 
+    @PutMapping("/{id}")
+    public ShoppingList updateShoppingList(@PathVariable Long id, @RequestBody ShoppingList updatedList) {
+        return shoppingListService.updateShoppingList(id, updatedList);
+    }
+
     // DELETE
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteShoppingList(@PathVariable Long id) {

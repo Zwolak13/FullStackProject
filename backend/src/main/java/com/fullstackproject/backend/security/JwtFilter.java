@@ -51,10 +51,6 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
 
-        // 🔍 DEBUG TU!
-        System.out.println("========== JWT DEBUG ==========");
-        System.out.println("Cookie JWT: " + jwtToken);
-
         if (jwtToken != null) {
             try {
                 email = jwtUtil.extractUsername(jwtToken);
@@ -63,9 +59,6 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
 
-        System.out.println("Email z tokena: " + email);
-        System.out.println("Auth w kontekście: " + SecurityContextHolder.getContext().getAuthentication());
-        System.out.println("================================");
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             var userDetails = userDetailsService.loadUserByUsername(email);

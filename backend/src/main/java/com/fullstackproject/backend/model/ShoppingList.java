@@ -85,7 +85,7 @@ public class ShoppingList {
         return dueDate;
     }
 
-    public void setCreationDate(LocalDate  dueDate) {
+    public void setDueDate(LocalDate  dueDate) {
         this.dueDate = dueDate;
     }
 

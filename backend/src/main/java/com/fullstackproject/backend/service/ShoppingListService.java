@@ -1,8 +1,10 @@
 package com.fullstackproject.backend.service;
 
+import com.fullstackproject.backend.model.Item;
 import com.fullstackproject.backend.model.ShoppingList;
 import com.fullstackproject.backend.model.User;
 import com.fullstackproject.backend.repository.ShoppingListRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -48,6 +50,51 @@ public class ShoppingListService {
                 .filter(shoppingList -> shoppingList.getPrice().compareTo(maxPrice) <= 0)
                 .toList();
     }
+
+    // Update shopping list po id
+    @Transactional
+    public ShoppingList updateShoppingList(Long id, ShoppingList updatedList) {
+        ShoppingList existingList = shoppingListRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("List not found"));
+
+        existingList.setName(updatedList.getName());
+        existingList.setDescription(updatedList.getDescription());
+        existingList.setDueDate(updatedList.getDueDate());
+        existingList.setCompleted(updatedList.isCompleted());
+
+        existingList.getItems().removeIf(item ->
+                updatedList.getItems().stream()
+                        .noneMatch(updatedItem -> updatedItem.getId() != null && updatedItem.getId().equals(item.getId()))
+        );
+
+        for (Item updatedItem : updatedList.getItems()) {
+            if (updatedItem.getId() != null) {
+                existingList.getItems().stream()
+                        .filter(item -> item.getId().equals(updatedItem.getId()))
+                        .findFirst()
+                        .ifPresent(existingItem -> {
+                            existingItem.setName(updatedItem.getName());
+                            existingItem.setPrice(updatedItem.getPrice());
+                            existingItem.setQuantity(updatedItem.getQuantity());
+                        });
+            }
+        }
+
+        updatedList.getItems().stream()
+                .filter(item -> item.getId() == null)
+                .forEach(item -> {
+                    item.setShoppingList(existingList);
+                    existingList.getItems().add(item);
+                });
+
+        BigDecimal totalPrice = existingList.getItems().stream()
+                .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        existingList.setPrice(totalPrice);
+
+        return shoppingListRepository.save(existingList);
+    }
+
 
     // Usuń ShoppingList po ID
     public void deleteById(Long id) {
