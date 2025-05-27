@@ -1,5 +1,6 @@
 package com.fullstackproject.backend.controller;
 
+import com.fullstackproject.backend.dto.UserDto;
 import com.fullstackproject.backend.model.User;
 import com.fullstackproject.backend.security.JwtUtil;
 import com.fullstackproject.backend.service.UserService;
@@ -14,6 +15,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Optional;
 
@@ -115,7 +121,69 @@ class UserControllerTest {
     }
 
     @Test
-    void getCurrentUser() {
+    void getCurrentUser_should_return_user_info_when_authenticated() {
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = mock(Authentication.class);
 
+        SecurityContextHolder.setContext(securityContext);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        when(authentication.isAuthenticated()).thenReturn(true);
+        when(authentication.getName()).thenReturn("test@example.com");
+
+        User user = new User();
+        user.setId(1L);
+        user.setEmail("test@example.com");
+
+        when(userService.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+
+        ResponseEntity<UserDto> response = userController.getCurrentUser();
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("test@example.com", response.getBody().getEmail());
     }
+
+    @Test
+    void getCurrentUser_should_throw_exception_when_user_not_found() {
+        Authentication auth = mock(Authentication.class);
+        SecurityContext context = mock(SecurityContext.class);
+
+        when(auth.isAuthenticated()).thenReturn(true);
+        when(auth.getName()).thenReturn("notfound@example.com");
+        when(context.getAuthentication()).thenReturn(auth);
+        SecurityContextHolder.setContext(context);
+
+        when(userService.findByEmail("notfound@example.com")).thenReturn(Optional.empty());
+
+        assertThrows(UsernameNotFoundException.class, () -> {
+            userController.getCurrentUser();
+        });
+    }
+
+    @Test
+    void getCurrentUser_should_return_unauthorized_when_authentication_is_null() {
+        SecurityContext context = mock(SecurityContext.class);
+        when(context.getAuthentication()).thenReturn(null);
+        SecurityContextHolder.setContext(context);
+
+        ResponseEntity<UserDto> response = userController.getCurrentUser();
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    }
+
+    @Test
+    void getCurrentUser_should_return_unauthorized_when_anonymous_authentication() {
+        SecurityContext context = mock(SecurityContext.class);
+        Authentication auth = mock(Authentication.class);
+
+        when(context.getAuthentication()).thenReturn(auth);
+        when(auth.isAuthenticated()).thenReturn(false);
+        SecurityContextHolder.setContext(context);
+
+        ResponseEntity<UserDto> response = userController.getCurrentUser();
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    }
+
 }
