@@ -42,6 +42,7 @@ export default function ShoppingLists({ changeWorkspace, editList }) {
             </button>
           </div>
           {[...lists]
+            .filter(list => list.completed === false)
             .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
             .map((item) => (
               <div

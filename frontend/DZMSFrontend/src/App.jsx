@@ -12,6 +12,8 @@ function App() {
   
   const [firstLoadFlag,setFirstLoadFlag] = useState(false); 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeWorkspace,setActiveWorkspace] = useState(null);
+  
 
   const [activeSection, setActiveSection] = useState(() => {
     return localStorage.getItem('activeSection') || "shopping";
@@ -41,7 +43,7 @@ function App() {
     }
   }
 
-  checkAuth();
+  
   const interval = setInterval(checkAuth, 30000);
   return () => clearInterval(interval);
 }, []);
@@ -138,7 +140,7 @@ function App() {
                         <Logo isHidden={hideDom ? true : null} className={`absolute transition-all duration-500 ${hideDom ? 'w-25 top-[0px]' : 'w-48 top-25'}`}/>
                         {changeDom ? 
                         <Nav logout={setSuccesfullLogin} className={`h-7/8 w-full pt-2 flex flex-col items-start transition  duration-500 ${delay ? 'opacity-0' : 'opacity-100'}`} 
-                        isMobile={false} activeSection={activeSection} setActiveSection={setActiveSection}/>
+                        isMobile={false} activeSection={activeSection} setActiveSection={setActiveSection} setActiveWorkspace={setActiveWorkspace}/>
                         :
                         <LeftSideBanerLogin className={`lg:flex flex-col justify-center items-center relative transition  duration-500 ${hideDom ? 'opacity-0' : 'opacity-100'}`}/>
                         }
@@ -168,7 +170,7 @@ function App() {
                         ${isMobileMenuOpen ? 'scale-5000' : 'scale-100'}`} />
 
                          {changeDom ?
-                          <Workspace  className={`w-full transition  duration-500 ${delay ? 'opacity-0' : 'opacity-100'}`}/>
+                          <Workspace activeWorkspace={activeWorkspace} setActiveWorkspace={setActiveWorkspace} className={`w-full transition  duration-500 ${delay ? 'opacity-0' : 'opacity-100'}`}/>
                         :
                         <Login succesfullLogin={setSuccesfullLogin} className={`flex flex-col justify-center items-center  relative w-full transition  duration-500 ${hideDom ? 'opacity-0' : 'opacity-100'}`} />
                         }
