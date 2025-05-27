@@ -46,11 +46,9 @@ export function ActiveListsProvider({ children }) {
       setLists(prev => [...prev, savedList]);
     } catch (err) {
       setError(err.message);
-      throw err; // możesz wyrzucić dalej, aby komponent mógł obsłużyć
+      throw err; 
     }
   }
-
-  // 3. Update list
   async function updateList(id, updates) {
     try {
       const res = await fetch(`http://localhost:8080/api/shopping-lists/${id}`, {
@@ -68,7 +66,23 @@ export function ActiveListsProvider({ children }) {
     }
   }
 
-  // 4. Remove list
+  async function completeList(id) {
+  try {
+    const res = await fetch(`http://localhost:8080/api/shopping-lists/complete/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+    });
+
+    if (!res.ok) throw new Error('Błąd aktualizacji listy');
+    const updatedList = await res.json();
+    setLists(prev => prev.map(list => list.id === id ? updatedList : list));
+  } catch (err) {
+    setError(err.message);
+    throw err;
+  }
+}
+
   async function removeList(id) {
     try {
       const res = await fetch(`http://localhost:8080/api/shopping-lists/${id}`, {
@@ -90,6 +104,7 @@ export function ActiveListsProvider({ children }) {
       error,
       addList,
       updateList,
+      completeList,
       removeList,
     }}>
       {children}

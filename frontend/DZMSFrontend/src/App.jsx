@@ -12,7 +12,7 @@ function App() {
   
   const [firstLoadFlag,setFirstLoadFlag] = useState(false); 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeWorkspace,setActiveWorkspace] = useState(null);
+  const [activeWorkspace,setActiveWorkspace] = useState('shopping');
   
 
   const [activeSection, setActiveSection] = useState(() => {
@@ -43,7 +43,7 @@ function App() {
     }
   }
 
-  
+   checkAuth();
   const interval = setInterval(checkAuth, 30000);
   return () => clearInterval(interval);
 }, []);
@@ -93,6 +93,7 @@ function App() {
 
     if(succesfullLoginDOM === true){
         const hideDomTimeout = setTimeout(()=>{
+        setActiveWorkspace('shopping');
         setHideDom(true);
         setDelay(true);
       },500)

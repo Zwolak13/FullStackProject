@@ -6,6 +6,7 @@ import com.fullstackproject.backend.model.User;
 import com.fullstackproject.backend.repository.ShoppingListRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -49,6 +50,17 @@ public class ShoppingListService {
         return shoppingListRepository.findAll().stream()
                 .filter(shoppingList -> shoppingList.getPrice().compareTo(maxPrice) <= 0)
                 .toList();
+    }
+
+
+    @Transactional
+    public  ShoppingList completeShoppingList(@PathVariable Long id){
+        ShoppingList existingList = shoppingListRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("List not found"));
+
+        existingList.setCompleted(true);
+
+        return shoppingListRepository.save(existingList);
     }
 
     // Update shopping list po id

@@ -5,11 +5,15 @@ export default function ShoppingLists({ changeWorkspace, editList }) {
   const [openMenuId, setOpenMenuId] = useState(null);
   const [openDropdownId, setOpenDropdownId] = useState(null);
   const menuRef = useRef(null);
-  const { lists, loading, error, removeList } = useLists();
+  const { lists, loading, error, removeList, completeList } = useLists();
 
   function handleEditList(item) {
     changeWorkspace("editForm");
     editList(item);
+  }
+
+  function handleCompletList(item){
+    completeList(item.id);
   }
 
   useEffect(() => {
@@ -123,7 +127,7 @@ export default function ShoppingLists({ changeWorkspace, editList }) {
                         className="block w-full text-left text-primary-light px-4 py-2 hover:bg-gray-200"
                         onClick={() => {
                           setOpenMenuId(null);
-                          handleEditList(item.id);
+                          handleCompletList(item);
                         }}
                       >
                         Completed
