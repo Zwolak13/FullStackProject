@@ -3,6 +3,7 @@ package com.fullstackproject.backend.controller;
 import com.fullstackproject.backend.model.User;
 import com.fullstackproject.backend.security.JwtUtil;
 import com.fullstackproject.backend.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
@@ -32,7 +33,6 @@ class UserControllerTest {
     void registerUser_should_register_new_user() {
         User user = new User();
         user.setEmail("test@example.com");
-        user.setPassword("Test_password123");
 
         when(userService.findByEmail("test@example.com"))
                 .thenReturn(Optional.empty());
@@ -46,7 +46,6 @@ class UserControllerTest {
     void registerUser_should_not_register_existing_user() {
         User user = new User();
         user.setEmail("test@example.com");
-        user.setPassword("Test_password123");
 
         when(userService.findByEmail("test@example.com"))
                 .thenReturn(Optional.of(user));
@@ -58,11 +57,41 @@ class UserControllerTest {
     }
 
     @Test
-    void getUserByUsername() {
+    void loginUser_should_login_user_with_valid_credentials() {
+        User user = new User();
+        user.setEmail("test@example.com");
+        user.setPassword("Test_password123");
+
+        when(userService.authenticate("test@example.com", "Test_password123"))
+                .thenReturn(Optional.of(user));
+
+        when(jwtUtil.generateToken("test@example.com")).thenReturn("mocked-token");
+
+        HttpServletResponse response = mock(HttpServletResponse.class);
+
+        ResponseEntity<String> result = userController.loginUser(user, response);
+
+        assertEquals(200, result.getStatusCodeValue());
+        assertEquals("Login successful", result.getBody());
+
+        verify(response).addHeader(eq("Set-Cookie"), contains("jwt=mocked-token"));
     }
 
     @Test
-    void loginUser() {
+    void loginUser_should_not_login_user_with_invalid_credentials() {
+        User user = new User();
+        user.setEmail("test@example.com");
+        user.setPassword("Test_password123");
+
+        when(userService.authenticate("test@example.com", "Test_password123"))
+                .thenReturn(Optional.empty());
+
+        HttpServletResponse response = mock(HttpServletResponse.class);
+
+        ResponseEntity<String> result = userController.loginUser(user, response);
+
+        assertEquals(HttpStatus.UNAUTHORIZED, result.getStatusCode());
+        assertEquals("Invalid credentials", result.getBody());
     }
 
     @Test
