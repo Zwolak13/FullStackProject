@@ -62,6 +62,9 @@ export default function ShoppingLists({ changeWorkspace, editList }) {
                 <p className="text-sm mt-2 w-full">
                   {item.description}
                 </p>
+                <p className="absolute bottom-5 text-sm text-gray-500">
+                  Total Cost: {(item.price).toFixed(2)}
+                </p>
 
                 {openDropdownId === item.id && (
                   <div className="absolute top-0 left-0 w-full h-full z-10 p-4 bg-white rounded-xl shadow-2xl border">
@@ -107,22 +110,31 @@ export default function ShoppingLists({ changeWorkspace, editList }) {
                       className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg z-20"
                     >
                       <button
-                        className="block w-full text-left px-4 py-2 hover:bg-gray-200"
-                        onClick={() => {
-                          removeList(item.id);
-                          setOpenMenuId(null);
-                        }}
-                      >
-                        Remove List
-                      </button>
-                      <button
-                        className="block w-full text-left px-4 py-2 hover:bg-gray-200"
+                        className="block w-full text-left px-4 py-2  hover:bg-gray-200"
                         onClick={() => {
                           setOpenMenuId(null);
                           handleEditList(item.id);
                         }}
                       >
                         Edit List
+                      </button>
+                      <button
+                        className="block w-full text-left text-primary-light px-4 py-2 hover:bg-gray-200"
+                        onClick={() => {
+                          setOpenMenuId(null);
+                          handleEditList(item.id);
+                        }}
+                      >
+                        Completed
+                      </button>
+                      <button
+                        className="block w-full text-left px-4 text-red-800 py-2 hover:bg-gray-200"
+                        onClick={() => {
+                          removeList(item.id);
+                          setOpenMenuId(null);
+                        }}
+                      >
+                        Remove List
                       </button>
                     </div>
                   )}

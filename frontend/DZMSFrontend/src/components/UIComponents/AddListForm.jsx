@@ -11,6 +11,8 @@ export default function AddListForm({goBackToList}){
     const {value: dateValue, handleInputChange: handleDateChange} = useInput('');
     const {value: descriptionValue, handleInputChange: handleDescriptionChange} = useInput('');
 
+    const {value: searchValue, handleInputChange: handleSearchChange} = useInput('');
+
     const [selectedItems, setSelectedItems] = useState([]);
     const [shoppingItems,setShoppingItems] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -115,9 +117,9 @@ export default function AddListForm({goBackToList}){
                 <button type="submit" className="bg-secondary-dark w-30 mt-10 h-10 rounded-2xl text-white font-bold  hover:bg-white hover:text-secondary-dark hover:border-2 border-secondary-dark flex justify-center items-center absolute top-15 left-100">SAVE</button>
                 </div>
                 <div className="h-[500px] w-[420px] max-w-full flex justify-center items-center ">
-                <div className="w-full max-w-3xl h-full bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col">
+                <div className="w-full max-w-3xl h-full bg-white rounded-2xl shadow-lg overflow-hidden flex relative flex-col">
                     <div className="overflow-y-auto hide-scrollbar">
-                    <table className="min-w-full text-left text-sm font-light">
+                    <table className="min-w-full  text-left text-sm font-light">
                         <thead className="bg-gray-100 sticky top-0 z-10">
                         <tr>
                             <th className="px-4 py-3 font-medium text-gray-700 w-1/3">Product</th>
@@ -125,7 +127,7 @@ export default function AddListForm({goBackToList}){
                             <th className="px-4 py-3 font-medium text-gray-700 w-1/3 text-center">Add</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody >
                             {loading ? (
                                 <tr>
                                 <td colSpan={3} className="text-center italic text-gray-500 py-4">
@@ -142,10 +144,11 @@ export default function AddListForm({goBackToList}){
                                 .slice()
                                 .sort((a, b) => a.name.localeCompare(b.name))
                                 .filter(item => !selectedItems.some(p => p.id === item.id))
+                                .filter(item => item.name.toLowerCase().includes(searchValue.toLowerCase()))
                                 .length === 0 ? (
                                 <tr>
                                 <td colSpan={3} className="text-center italic text-gray-500 py-4">
-                                    You have to add product to your list to see them.
+                                    There is no products
                                 </td>
                                 </tr>
                             ) : (
@@ -153,6 +156,7 @@ export default function AddListForm({goBackToList}){
                                 .slice()
                                 .sort((a, b) => a.name.localeCompare(b.name))
                                 .filter(item => !selectedItems.some(p => p.id === item.id))
+                                .filter(item => item.name.toLowerCase().includes(searchValue.toLowerCase()))    
                                 .map((item) => (
                                     <tr key={item.id} className="h-12 even:bg-gray-50 hover:bg-gray-100 transition">
                                     <td className="px-4 py-2">{item.name}</td>
@@ -168,25 +172,38 @@ export default function AddListForm({goBackToList}){
                                     </tr>
                                 ))
                             )}
+                            
                             </tbody>
 
                     </table>
                     </div>
+                     <div className="absolute bottom-0 bg-gray-100 w-full px-4 py-3">
+                                    <input type="text" className="w-full pl-8" onChange={handleSearchChange} value={searchValue} placeholder='Search product...' />
+                                <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="w-6 h-6 stroke-black text-gray-700 hover:text-blue-500 transition absolute left-5 top-1/4"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                >
+                                <path d="M21 21l-4.34-4.34" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+                                <circle cx="11" cy="11" r="8" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+                                </svg>
+                    </div>
                 </div>
                 </div>
 
-                <div className=" h-[500px] w-[420px] max-w-full flex justify-center items-center ">
-                <div className="w-full max-w-3xl h-full bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col">
+                <div className="h-[500px] w-[420px] max-w-full flex justify-center items-center ">
+                <div className="w-full max-w-3xl h-full bg-white rounded-2xl shadow-lg overflow-hidden flex relative flex-col">
                     <div className="overflow-y-auto hide-scrollbar">
-                    <table className="min-w-full text-left text-sm font-light">
+                    <table className="min-w-full  text-left text-sm font-light">
                         <thead className="bg-gray-100 sticky top-0 z-10">
                         <tr>
                             <th className="px-4 py-3 font-medium text-gray-700 w-1/3">Product</th>
                             <th className="px-4 py-3 font-medium text-gray-700 w-1/3">Cost</th>
-                            <th className="px-4 py-3 font-medium text-gray-700 w-1/3 text-center">Qunatity</th>
+                            <th className="px-4 py-3 font-medium text-gray-700 w-1/3 text-center">Add</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody >
                             {selectedItems.length === 0 ? (
                                 <tr>
                                     <td colSpan={3} className="text-center italic text-gray-500 py-4">
@@ -220,8 +237,31 @@ export default function AddListForm({goBackToList}){
                                     </tr>
                                 ))
                                 )}
-                        </tbody>
+                            </tbody>
+
                     </table>
+                    </div>
+                     <div className="absolute bottom-0 bg-gray-100 w-full px-4 py-3 flex flex-row justify-between text-gray-500">
+                                   <div className="flex flex-row">
+                                     <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    className="w-6 h-6 stroke-black stroke-2 stroke-linecap-round stroke-linejoin-round fill-none lucide lucide-shopping-basket-icon"
+                                    >
+                                    <path d="m15 11-1 9" />
+                                    <path d="m19 11-4-7" />
+                                    <path d="M2 11h20" />
+                                    <path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4" />
+                                    <path d="M4.5 15.5h15" />
+                                    <path d="m5 11 4-7" />
+                                    <path d="m9 11 1 9" />
+                                    </svg>
+                                
+                                <span className="pl-2 ">Total Cost</span>
+                                   </div>
+                                <div>
+                                    <span>{(selectedItems.reduce((acc,item) => acc+item.price*item.quantity,0)).toFixed(2)}</span>
+                                </div>
                     </div>
                 </div>
                 </div>
