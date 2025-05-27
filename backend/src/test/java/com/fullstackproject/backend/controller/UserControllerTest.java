@@ -3,9 +3,12 @@ package com.fullstackproject.backend.controller;
 import com.fullstackproject.backend.model.User;
 import com.fullstackproject.backend.security.JwtUtil;
 import com.fullstackproject.backend.service.UserService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import net.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -68,7 +71,6 @@ class UserControllerTest {
         when(jwtUtil.generateToken("test@example.com")).thenReturn("mocked-token");
 
         HttpServletResponse response = mock(HttpServletResponse.class);
-
         ResponseEntity<String> result = userController.loginUser(user, response);
 
         assertEquals(200, result.getStatusCodeValue());
@@ -87,7 +89,6 @@ class UserControllerTest {
                 .thenReturn(Optional.empty());
 
         HttpServletResponse response = mock(HttpServletResponse.class);
-
         ResponseEntity<String> result = userController.loginUser(user, response);
 
         assertEquals(HttpStatus.UNAUTHORIZED, result.getStatusCode());
@@ -95,10 +96,26 @@ class UserControllerTest {
     }
 
     @Test
-    void logout() {
+    void logout_should_return_correct_cookie_and_logout_user() {
+        User user = new User();
+        ArgumentCaptor<Cookie> cookieCaptor = ArgumentCaptor.forClass(Cookie.class);
+
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        ResponseEntity<?> result = userController.logout(response);
+        verify(response).addCookie(cookieCaptor.capture());
+        Cookie cookie = cookieCaptor.getValue();
+
+        assertEquals("jwt", cookie.getName());
+        assertNull(null, cookie.getValue());
+        assertTrue(cookie.isHttpOnly());
+        assertEquals("/", cookie.getPath());
+        assertEquals(0, cookie.getMaxAge());
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals("Logged out successfully", result.getBody());
     }
 
     @Test
     void getCurrentUser() {
+
     }
 }
