@@ -10,6 +10,5 @@ import java.util.Optional;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
     Optional<Item> findByName(String name);
-    List<Item> findByUnitPrice(BigDecimal unitPrice);
-    List<Item> findByType(String type);
+    List<Item> findByPrice(BigDecimal price);
 }

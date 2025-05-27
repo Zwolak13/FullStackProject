@@ -8,7 +8,15 @@
     --color-secondary-light_two: #69BFA0;
     --color-secondary-light_three: #5AA658;
 
-
+     --breakpoint-lg: 68.75rem;
     --breakpoint-md-: initial;
     --breakpoint-md-: 1000px
+}
+
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE i Edge */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }

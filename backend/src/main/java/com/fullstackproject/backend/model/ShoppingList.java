@@ -1,9 +1,11 @@
 package com.fullstackproject.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,37 +25,35 @@ public class ShoppingList {
     private boolean completed;
 
     @Column(nullable = false)
-    private LocalDateTime creationDate;
+    private LocalDate  dueDate;
 
-    private LocalDateTime completionDate;
+    private String description;
 
     @Column(nullable = false)
     private BigDecimal price;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "shoppingList", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Item> items = new ArrayList<>();
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     public ShoppingList() {}
 
-    public ShoppingList(Long id, String name, boolean completed, LocalDateTime creationDate, LocalDateTime completionDate, BigDecimal price, List<Item> items, User user) {
-        this.id = id;
+    public ShoppingList(String name, boolean completed, LocalDate  dueDate, String description, BigDecimal price, List<Item> items, User user) {
         this.name = name;
         this.completed = completed;
-        this.creationDate = creationDate;
-        this.completionDate = completionDate;
+        this.dueDate = dueDate;
+        this.description = description;
         this.price = price;
         this.items = items;
         this.user = user;
     }
 
-    @PrePersist
-    protected void onCreate() {
-        this.creationDate = LocalDateTime.now();
-    }
+
 
     // Gettery, settery, konstruktory
 
@@ -81,20 +81,20 @@ public class ShoppingList {
         this.completed = completed;
     }
 
-    public LocalDateTime getCreationDate() {
-        return creationDate;
+    public LocalDate getDueDate() {
+        return dueDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
+    public void setDueDate(LocalDate  dueDate) {
+        this.dueDate = dueDate;
     }
 
-    public LocalDateTime getCompletionDate() {
-        return completionDate;
+    public String getDescription() {
+        return description;
     }
 
-    public void setCompletionDate(LocalDateTime completionDate) {
-        this.completionDate = completionDate;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public BigDecimal getPrice() {
@@ -116,4 +116,14 @@ public class ShoppingList {
     public User getUser() { return user; }
 
     public void setUser(User user) { this.user = user; }
+
+    public void addItem(Item item) {
+        items.add(item);
+        item.setShoppingList(this);
+    }
+
+    public void removeItem(Item item) {
+        items.remove(item);
+        item.setShoppingList(null);
+    }
 }

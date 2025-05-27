@@ -18,9 +18,6 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
-    public List<Item> findByType(String type) {
-        return itemRepository.findByType(type);
-    }
 
     // Zapisz nowy item
     public Item saveItem(Item item) {
@@ -38,9 +35,9 @@ public class ItemService {
     }
 
     // Znajdź itemy o cenie mniejszej lub równej danej wartości
-    public List<Item> findByMaxUnitPrice(BigDecimal maxPrice) {
+    public List<Item> findByMaxPrice(BigDecimal maxPrice) {
         return itemRepository.findAll().stream()
-                .filter(item -> item.getUnitPrice().compareTo(maxPrice) <= 0)
+                .filter(item -> item.getPrice().compareTo(maxPrice) <= 0)
                 .toList();
     }
 

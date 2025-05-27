@@ -1,6 +1,8 @@
 package com.fullstackproject.backend.controller;
 
 import com.fullstackproject.backend.model.ShoppingList;
+import com.fullstackproject.backend.model.User;
+import com.fullstackproject.backend.service.UserService;
 import com.fullstackproject.backend.service.ShoppingListService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +16,11 @@ import java.util.Optional;
 public class ShoppingListController {
 
     private final ShoppingListService shoppingListService;
+    private final UserService userService;
 
-    public ShoppingListController(ShoppingListService shoppingListService) {
+    public ShoppingListController(ShoppingListService shoppingListService, UserService userService) {
         this.shoppingListService = shoppingListService;
+        this.userService = userService;
     }
 
     // CREATE
@@ -28,7 +32,9 @@ public class ShoppingListController {
     // GET ALL
     @GetMapping
     public ResponseEntity<List<ShoppingList>> getAllShoppingLists() {
-        return ResponseEntity.ok(shoppingListService.findAll());
+        User currentUser = userService.getCurrentUser();
+        List<ShoppingList> lists = shoppingListService.findByUserId(currentUser.getId());
+        return ResponseEntity.ok(lists);
     }
 
     // GET BY ID
@@ -49,6 +55,16 @@ public class ShoppingListController {
     @GetMapping("/price")
     public ResponseEntity<List<ShoppingList>> getByMaxPrice(@RequestParam BigDecimal maxPrice) {
         return ResponseEntity.ok(shoppingListService.findByMaxPrice(maxPrice));
+    }
+
+    @PutMapping("/complete/{id}")
+    public  ShoppingList completeShoppingList(@PathVariable Long id){
+        return shoppingListService.completeShoppingList(id);
+    }
+
+    @PutMapping("/{id}")
+    public ShoppingList updateShoppingList(@PathVariable Long id, @RequestBody ShoppingList updatedList) {
+        return shoppingListService.updateShoppingList(id, updatedList);
     }
 
     // DELETE

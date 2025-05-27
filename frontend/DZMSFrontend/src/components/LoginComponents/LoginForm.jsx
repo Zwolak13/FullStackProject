@@ -30,6 +30,7 @@ export default function LoginForm({onChange, popupAnimation, isLogin, succesfull
         try{
             const response = await fetch('http://localhost:8080/api/users/login', {
                 method: 'POST',
+                credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
             });
