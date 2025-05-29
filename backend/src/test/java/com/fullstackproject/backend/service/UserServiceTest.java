@@ -7,12 +7,16 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class UserServiceTest {
 
@@ -82,13 +86,49 @@ class UserServiceTest {
 
     @Test
     void getCurrentUser_should_return_current_user() {
+        String email = "test@example.com";
 
+        User user = new User();
+        user.setEmail(email);
+
+        // Set up mock authentication in security context
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(email, null);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+
+        User result = userService.getCurrentUser();
+
+        assertEquals(user, result);
     }
 
     @Test
-    void getCurrentUser_should_throw_exception_if_user_is_not_found() {}
+    void getCurrentUser_should_throw_exception_if_user_is_not_found() {
+        String email = "test@example.com";
+
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(email, null);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+
+        assertThrows(UsernameNotFoundException.class, () -> userService.getCurrentUser());
+    }
 
     @Test
     void findByEmail_should_return_user_with_given_email() {
+        String email = "test@example.com";
+        User user = new User();
+        user.setEmail(email);
+
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+
+        Optional<User> result = userService.findByEmail(email);
+
+        assertTrue(result.isPresent());
+        assertEquals(user, result.get());
     }
 }
