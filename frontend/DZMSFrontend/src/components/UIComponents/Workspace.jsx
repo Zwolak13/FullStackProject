@@ -4,6 +4,7 @@ import AddListForm from "./AddListForm";
 import { ActiveListsProvider } from "../Context/ActiveListContext";
 import EditListForm from "./EditListForm";
 import CompletedLists from "./CompletedLists"
+import Summary from "./Summary";
 
 export default function Workspace({activeWorkspace, setActiveWorkspace, ...props}){
 
@@ -31,6 +32,7 @@ export default function Workspace({activeWorkspace, setActiveWorkspace, ...props
       else if (visibleWorkspace === 'addForm')Content = <AddListForm goBackToList={() => setActiveWorkspace('shopping')} />;
       else if(visibleWorkspace ==='editForm') Content = <EditListForm goBackToList={() => setActiveWorkspace('shopping')} listData={editedListId} />;
       else if(visibleWorkspace === 'completed') Content = <CompletedLists />
+      else if(visibleWorkspace === 'summary') Content = <Summary />
 
 
     return (

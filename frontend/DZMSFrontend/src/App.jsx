@@ -134,8 +134,8 @@ function App() {
 
 
   return (
-    <main  className="flex items-center justify-center min-h-screen">
-                <div className="w-screen h-screen  flex flex-row hide-scrollbar overflow-y-auto">
+    <main  className="flex items-center justify-center min-h-screen ">
+                <div className={`w-screen h-screen  flex flex-row hide-scrollbar ${changeDom ? 'overflow-y-auto' : 'overflow-hidden'}`}>
                     <div id='leftSide' className={`sticky top-0 sticky hidden transition-all  duration-1000   bg-gradient-to-br from-primiary-dark to-secondary-dark text-white lg:flex 
                     flex-col justify-center  items-center relative  ${changeDom ? 'lg:w-1/6 lg:justify-end' : 'lg:w-1/2' }`}>
                         <Logo isHidden={hideDom ? true : null} className={`absolute transition-all duration-500 ${hideDom ? 'w-25 top-[0px]' : 'w-48 top-25'}`}/>
@@ -173,7 +173,7 @@ function App() {
                          {changeDom ?
                           <Workspace activeWorkspace={activeWorkspace} setActiveWorkspace={setActiveWorkspace} className={`w-full transition  duration-500 ${delay ? 'opacity-0' : 'opacity-100'}`}/>
                         :
-                        <Login succesfullLogin={setSuccesfullLogin} className={`flex flex-col justify-center items-center  relative w-full transition  duration-500 ${hideDom ? 'opacity-0' : 'opacity-100'}`} />
+                        <Login succesfullLogin={setSuccesfullLogin} className={`flex flex-col justify-center items-center  relative w-full transition   duration-500 ${hideDom ? 'opacity-0' : 'opacity-100'}`} />
                         }
 
 
