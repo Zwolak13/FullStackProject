@@ -162,7 +162,7 @@ function App() {
                       </button>
 
                       {delay && <Nav logout={setSuccesfullLogin} className={` z-20 top-0 left-0 fixed  w-screen bg-primiary-dark transition-all duration-400 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0'}`}
-                      isMobile={true} closeMenu={()=>setIsMobileMenuOpen(false)} activeSection={activeSection} setActiveSection={setActiveSection}/>}
+                      isMobile={true} closeMenu={()=>setIsMobileMenuOpen(false)} activeSection={activeSection} setActiveSection={setActiveSection} setActiveWorkspace={setActiveWorkspace}/>}
                         
                         
                         </>
