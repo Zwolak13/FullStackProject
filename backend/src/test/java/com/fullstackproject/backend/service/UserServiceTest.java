@@ -8,6 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -38,16 +40,44 @@ class UserServiceTest {
 
     @Test
     void authenticate_should_authenticate_when_user_is_present_and_passwords_match() {
+        String email = "test@example.com";
+        String password = "Password_123";
 
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(password);
+
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+
+        Optional<User> result = userService.authenticate(email, password);
+
+        assertTrue(result.isPresent());
+        assertEquals(user, result.get());
     }
 
     @Test
     void authenticate_should_return_empty_if_password_does_not_match() {
+        String email = "test@example.com";
+        String password = "Password_123";
+
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(password);
+
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+
+        Optional<User> result = userService.authenticate(email, "wrongPassword");
+
+        assertFalse(result.isPresent());
     }
 
     @Test
     void authenticate_should_return_empty_if_user_is_not_found() {
+        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.empty());
 
+        Optional<User> result = userService.authenticate("test@example.com", "Password_123");
+
+        assertFalse(result.isPresent());
     }
 
     @Test
