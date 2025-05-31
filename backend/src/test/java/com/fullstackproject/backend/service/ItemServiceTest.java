@@ -5,6 +5,9 @@ import com.fullstackproject.backend.repository.ItemRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -75,7 +78,24 @@ class ItemServiceTest {
     }
 
     @Test
-    void findByMaxPrice() {
+    void findByMaxPrice_should_return_items_below_or_equal_price() {
+        Item item1 = new Item();
+        item1.setPrice(new BigDecimal("50"));
+
+        Item item2 = new Item();
+        item2.setPrice(new BigDecimal("100"));
+
+        Item item3 = new Item();
+        item3.setPrice(new BigDecimal("150"));
+
+        when(itemRepository.findAll()).thenReturn(Arrays.asList(item1, item2, item3));
+
+        List<Item> result = itemService.findByMaxPrice(new BigDecimal("100"));
+
+        assertEquals(2, result.size());
+        assertTrue(result.contains(item1));
+        assertTrue(result.contains(item2));
+        assertFalse(result.contains(item3));
     }
 
     @Test
