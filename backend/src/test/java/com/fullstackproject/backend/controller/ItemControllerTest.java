@@ -78,6 +78,10 @@ class ItemControllerTest {
     }
 
     @Test
-    void deleteItem() {
+    void deleteItem_should_call_service_and_return_no_content() {
+        ResponseEntity<Void> response = itemController.deleteItem(1L);
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        verify(itemService).deleteById(1L);
     }
 }
