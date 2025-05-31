@@ -1,17 +1,56 @@
 package com.fullstackproject.backend.service;
 
+import com.fullstackproject.backend.model.Item;
+import com.fullstackproject.backend.repository.ItemRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class ItemServiceTest {
 
-    @Test
-    void saveItem() {
+    private ItemRepository itemRepository;
+    private ItemService itemService;
+
+    @BeforeEach
+    void setUp() {
+        itemRepository = mock(ItemRepository.class);
+        itemService = new ItemService(itemRepository);
     }
 
     @Test
-    void findById() {
+    void saveItem_should_return_saved_item() {
+        Item item = new Item();
+        when(itemRepository.save(item)).thenReturn(item);
+
+        Item saved = itemService.saveItem(item);
+
+        assertEquals(item, saved);
+        verify(itemRepository).save(item);
+    }
+
+    @Test
+    void findById_should_return_item_if_exists() {
+        Item item = new Item();
+        item.setId(1L);
+        when(itemRepository.findById(1L)).thenReturn(Optional.of(item));
+
+        Optional<Item> result = itemService.findById(1L);
+
+        assertTrue(result.isPresent());
+        assertEquals(item, result.get());
+    }
+
+    @Test
+    void findById_should_return_empty_if_not_found() {
+        when(itemRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Optional<Item> result = itemService.findById(1L);
+
+        assertFalse(result.isPresent());
     }
 
     @Test
