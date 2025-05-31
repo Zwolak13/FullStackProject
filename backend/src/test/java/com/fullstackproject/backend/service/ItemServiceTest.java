@@ -54,7 +54,24 @@ class ItemServiceTest {
     }
 
     @Test
-    void findByName() {
+    void findByName_should_return_item_if_exists() {
+        Item item = new Item();
+        item.setName("TestItem");
+        when(itemRepository.findByName("TestItem")).thenReturn(Optional.of(item));
+
+        Optional<Item> result = itemService.findByName("TestItem");
+
+        assertTrue(result.isPresent());
+        assertEquals(item, result.get());
+    }
+
+    @Test
+    void findByName_should_return_empty_if_not_found() {
+        when(itemRepository.findByName("TestItem")).thenReturn(Optional.empty());
+
+        Optional<Item> result = itemService.findByName("TestItem");
+
+        assertFalse(result.isPresent());
     }
 
     @Test
