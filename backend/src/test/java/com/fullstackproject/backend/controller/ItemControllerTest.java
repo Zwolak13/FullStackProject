@@ -74,7 +74,36 @@ class ItemControllerTest {
     }
 
     @Test
-    void updateItem() {
+    void updateItem_should_update_and_return_item_when_found() {
+        Item existingItem = new Item();
+        existingItem.setId(1L);
+        existingItem.setName("Old");
+        existingItem.setQuantity(1);
+        existingItem.setPrice(BigDecimal.valueOf(5));
+
+        Item updatedItem = new Item();
+        updatedItem.setName("New");
+        updatedItem.setQuantity(10);
+        updatedItem.setPrice(BigDecimal.valueOf(15));
+
+        when(itemService.findById(1L)).thenReturn(Optional.of(existingItem));
+        when(itemService.saveItem(any(Item.class))).thenReturn(existingItem);
+
+        ResponseEntity<Item> response = itemController.updateItem(1L, updatedItem);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("New", response.getBody().getName());
+        assertEquals(10, response.getBody().getQuantity());
+        assertEquals(BigDecimal.valueOf(15), response.getBody().getPrice());
+    }
+
+    @Test
+    void updateItem_should_return_not_found_when_item_does_not_exist() {
+        when(itemService.findById(1L)).thenReturn(Optional.empty());
+
+        ResponseEntity<Item> response = itemController.updateItem(1L, new Item());
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
