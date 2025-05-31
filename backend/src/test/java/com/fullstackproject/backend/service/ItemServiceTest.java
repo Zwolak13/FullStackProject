@@ -99,10 +99,20 @@ class ItemServiceTest {
     }
 
     @Test
-    void deleteById() {
+    void deleteById_should_call_repository() {
+        itemService.deleteById(1L);
+
+        verify(itemRepository).deleteById(1L);
     }
 
     @Test
-    void findAll() {
+    void findAll_should_return_all_items() {
+        List<Item> items = List.of(new Item(), new Item());
+        when(itemRepository.findAll()).thenReturn(items);
+
+        List<Item> result = itemService.findAll();
+
+        assertEquals(items.size(), result.size());
+        assertEquals(items, result);
     }
 }
