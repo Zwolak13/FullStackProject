@@ -13,6 +13,8 @@ export default function Workspace({activeWorkspace, setActiveWorkspace, ...props
     const [editedListId,setEditedListId] = useState(null);
     const [fancyDelay, setFancyDelay] = useState(false);
 
+    console.log(visibleWorkspace);
+
     useEffect(() =>{
             setFancyDelay(true);
 

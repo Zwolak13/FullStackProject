@@ -12,14 +12,15 @@ function App() {
   
   const [firstLoadFlag,setFirstLoadFlag] = useState(false); 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeWorkspace,setActiveWorkspace] = useState('shopping');
-  
 
   const [activeSection, setActiveSection] = useState(() => {
     return localStorage.getItem('activeSection') || "shopping";
   });
 
-  
+
+  const [activeWorkspace,setActiveWorkspace] = useState(activeSection);
+
+
 
   const [succesfullLoginDOM,setSuccesfullLogin] = useState(false);
   const [hideDom, setHideDom] = useState(false);
@@ -37,6 +38,7 @@ function App() {
         setSuccesfullLogin(true); 
       } else {
         setSuccesfullLogin(false); 
+        setActiveSection('shopping');
       }
     } catch (error) {
       setSuccesfullLogin(false); 
@@ -93,7 +95,6 @@ function App() {
 
     if(succesfullLoginDOM === true){
         const hideDomTimeout = setTimeout(()=>{
-        setActiveWorkspace('shopping');
         setHideDom(true);
         setDelay(true);
       },500)
@@ -115,7 +116,8 @@ function App() {
     }
     else{
       setDelay(true);
-
+      setActiveSection('shopping');
+      setActiveWorkspace('shopping');
       const changeDomTimeout = setTimeout(()=>{
         setChangeDom(prev => !prev);
       },500)

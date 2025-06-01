@@ -13,12 +13,14 @@ export default function Nav({logout,isMobile,closeMenu=()=>{},activeSection,setA
     });
 
     if (!res.ok) {
-      throw new Error('Wylogowanie nie powiodło się');
+      throw new Error('Something went wrong');
     }
     logout(false); 
   } catch (err) {
-    console.error('Błąd wylogowania:', err);
+    console.error('Logout error: ', err);
   }
+
+  localStorage.removeItem('activeSection');
 }
     
 
