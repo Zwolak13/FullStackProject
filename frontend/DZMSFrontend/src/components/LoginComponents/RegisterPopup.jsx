@@ -19,5 +19,15 @@ export default function RegisterPopups({type,animate}){
             <p>Login failed. Please check your email and password.</p>
         </div>
     }
-    
+    else if (type === 'successReg'){
+        return <div className={`-z-10 bg-primary-light/50 px-5 py-5 absolute -top-20 -translate-y-30 transition duration-500 ease-in-out ${animate && 'translate-y-0'}`}>
+            <p>Your password has been changed.</p>
+        </div>
+    }
+    else if(type === 'conflictReg') {
+        return <div className={`-z-10 bg-red-500/30 px-5 py-5 absolute -top-20 -translate-y-30 transition duration-500 ease-in-out ${animate && 'translate-y-0'}`}>
+            <p>Authentication failed. Please check your email and password.</p>
+        </div>
+    }
+
 }

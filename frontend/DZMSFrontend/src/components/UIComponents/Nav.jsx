@@ -64,11 +64,12 @@ export default function Nav({logout,isMobile,closeMenu=()=>{},activeSection,setA
     {isMobile ? 
     <>
     <button
-          onClick={() => {handleClick(999)
+          onClick={() => {handleClick('settings')
+              setActiveWorkspace('settings');
               if (isMobile) closeMenu();
           }}
           className={`w-full flex items-center px-4 py-4 transition-all duration-500  ${
-            activeSection === 999 ? "bg-white/20" : "hover:bg-primary-light"
+            activeSection === 'settings' ? "bg-white/20" : "hover:bg-primary-light"
           }`}
         >
           <svg
@@ -121,12 +122,17 @@ export default function Nav({logout,isMobile,closeMenu=()=>{},activeSection,setA
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
             </svg>
         </button>
-        <button>
+        <button
+          onClick={() => {
+            handleClick('settings');
+            setActiveWorkspace('settings')}
+          }        
+            >
             <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="none"
-            className="w-6 h-6 stroke-white stroke-2 transition-all duration-300 hover:stroke-gray-500"
+            className={`w-6 h-6 stroke-2 transition-all duration-300  ${activeSection === 'settings' ? 'stroke-gray-500' : 'hover:stroke-gray-500 stroke-white'}`}
             strokeLinecap="round"
             strokeLinejoin="round"
             >

@@ -58,8 +58,8 @@ export default function LoginForm({onChange, popupAnimation, isLogin, succesfull
                         <input type="text" name="email" placeholder="Email" value={emailValue} onChange={handleEmailChange} className=" px-2 w-100 h-12 rounded-2xl bg-primary-light/50 mb-8"/>
                         <input type="password" name="password" placeholder="Password" value={passwordValue} onChange={handlePasswordChange} className="px-2 w-100 h-12 rounded-2xl bg-primary-light/50 mb-2" />
                         <p className="mb-20">Forgot your <button type="button" onClick={()=>setIsModalOpen(true)} className="text-primiary-dark font-bold" disabled={waitingResponse}>password?</button></p>
-                        <button type="submit" className="bg-secondary-dark w-50 h-10 rounded-2xl text-white font-bold  hover:bg-white hover:text-secondary-dark hover:border-2 border-secondary-dark flex justify-center items-center"  disabled={waitingResponse} >{waitingResponse ? <img className="w-7" src={LOADING_GIF} /> : "Login"}</button>
-                        <p>Don't have an account? <button type="button" className="text-primiary-dark font-bold hover:underline" disabled={isLoading || waitingResponse} onClick={onChange}>sign up</button></p>
+                        <button type="submit" className="bg-secondary-dark w-50 h-10 rounded-2xl text-white font-bold  hover:bg-white hover:text-secondary-dark hover:border-2 border-secondary-dark flex justify-center items-center"  disabled={isLogin.component || waitingResponse} >{waitingResponse ? <img className="w-7" src={LOADING_GIF} /> : "Login"}</button>
+                        <p>Don't have an account? <button type="button" className="text-primiary-dark font-bold hover:underline" disabled={isLoading || isLogin.component} onClick={onChange}>sign up</button></p>
                      </form>
             {isLogin.component && <RegisterPopup type={isLogin.popup} animate={isLogin.animation}/> }
         </>

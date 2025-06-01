@@ -113,7 +113,7 @@ export default function EditListForm({goBackToList,listData}){
             <h1 className="text-4xl font-bold pt-3 pb-8 flex justify-start items-center lg:block">Edditing Shopping List</h1>
             <div className=" flex flex-col items-center lg:block">
             <form onSubmit={handleAddingList} className="flex flex-wrap gap-6 pb-6 justify-center">
-                <div className="h-[500px] w-[420px] max-w-full">
+                <div className="h-[300px] w-[420px] max-w-full">
                 <Input type="text" name="title" placeholder="Title"  className=" px-2 w-full h-12 rounded-2xl bg-primary-light/50 " onChange={handleTitleChange} value={titleValue}/>
                 <Input type="date" name="date"  className=" px-2 w-full h-12 rounded-2xl bg-primary-light/50 " onChange={handleDateChange} value={dateValue}
                 min={new Date().toISOString().split("T")[0]}/>
