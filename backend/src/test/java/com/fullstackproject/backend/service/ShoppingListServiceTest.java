@@ -84,7 +84,16 @@ class ShoppingListServiceTest {
     }
 
     @Test
-    void completeShoppingList() {
+    void completeShoppingList_should_set_completed_true() {
+        ShoppingList list = new ShoppingList(); list.setId(1L); list.setCompleted(false);
+
+        when(shoppingListRepository.findById(1L)).thenReturn(Optional.of(list));
+        when(shoppingListRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        ShoppingList completed = shoppingListService.completeShoppingList(1L);
+
+        assertTrue(completed.isCompleted());
+        verify(shoppingListRepository).save(completed);
     }
 
     @Test
