@@ -141,14 +141,26 @@ class ShoppingListServiceTest {
     }
 
     @Test
-    void deleteById() {
+    void deleteById_should_delegate_to_repository() {
+        shoppingListService.deleteById(1L);
+        verify(shoppingListRepository).deleteById(1L);
     }
 
     @Test
-    void findByUserId() {
+    void findByUserId_should_return_lists() {
+        List<ShoppingList> lists = List.of(new ShoppingList(), new ShoppingList());
+        when(shoppingListRepository.findByUserId(99L)).thenReturn(lists);
+
+        List<ShoppingList> result = shoppingListService.findByUserId(99L);
+
+        assertEquals(lists, result);
     }
 
     @Test
-    void findAll() {
+    void findAll_should_return_all_lists() {
+        List<ShoppingList> lists = List.of(new ShoppingList());
+        when(shoppingListRepository.findAll()).thenReturn(lists);
+
+        assertEquals(lists, shoppingListService.findAll());
     }
 }
