@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,7 +53,21 @@ class ShoppingListServiceTest {
     }
 
     @Test
-    void findById() {
+    void findById_should_return_list_when_exists() {
+        ShoppingList list = new ShoppingList(); list.setId(1L);
+        when(shoppingListRepository.findById(1L)).thenReturn(Optional.of(list));
+
+        Optional<ShoppingList> result = shoppingListService.findById(1L);
+
+        assertTrue(result.isPresent());
+        assertEquals(list, result.get());
+    }
+
+    @Test
+    void findByName_should_return_empty_when_missing() {
+        when(shoppingListRepository.findByName("Groceries")).thenReturn(Optional.empty());
+
+        assertTrue(shoppingListService.findByName("Groceries").isEmpty());
     }
 
     @Test
