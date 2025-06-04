@@ -24,7 +24,7 @@ A fullstack application for managing shopping lists and items — built with **S
 
 ### Prerequisites
 Make sure you have:
-- Java 17+
+- Java 21+
 - Node.js & npm (for frontend)
 - Gradle (if not using the Gradle Wrapper)
 - Git (optional)
