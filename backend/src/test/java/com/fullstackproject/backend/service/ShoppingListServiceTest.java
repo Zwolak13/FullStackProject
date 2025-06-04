@@ -71,11 +71,16 @@ class ShoppingListServiceTest {
     }
 
     @Test
-    void findByName() {
-    }
+    void findByMaxPrice_should_filter_lists_correctly() {
+        ShoppingList cheap  = new ShoppingList(); cheap.setPrice(BigDecimal.valueOf(30));
+        ShoppingList pricey = new ShoppingList(); pricey.setPrice(BigDecimal.valueOf(120));
 
-    @Test
-    void findByMaxPrice() {
+        when(shoppingListRepository.findAll()).thenReturn(List.of(cheap, pricey));
+
+        List<ShoppingList> result = shoppingListService.findByMaxPrice(BigDecimal.valueOf(100));
+
+        assertEquals(1, result.size());
+        assertTrue(result.contains(cheap));
     }
 
     @Test
