@@ -8,6 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -97,7 +100,44 @@ class ShoppingListServiceTest {
     }
 
     @Test
-    void updateShoppingList() {
+    void updateShoppingList_should_update_fields_and_recalculate_price() {
+        ShoppingList existing = new ShoppingList();
+        existing.setId(1L);
+        existing.setName("Old");
+
+        Item oldItem = new Item();
+        oldItem.setId(10L);
+        oldItem.setPrice(BigDecimal.valueOf(2));
+        oldItem.setQuantity(1);
+
+        existing.setItems(new ArrayList<>(List.of(oldItem)));
+
+        ShoppingList updated = new ShoppingList();
+        updated.setName("New");
+        updated.setDescription("new-desc");
+        updated.setCompleted(true);
+
+        Item sameId = new Item();
+        sameId.setId(10L);
+        sameId.setPrice(BigDecimal.valueOf(3));
+        sameId.setQuantity(2);
+
+        Item newItem = new Item();
+        newItem.setPrice(BigDecimal.valueOf(1));
+        newItem.setQuantity(5);
+
+        updated.setItems(List.of(sameId, newItem));
+
+        when(shoppingListRepository.findById(1L)).thenReturn(Optional.of(existing));
+        when(shoppingListRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        ShoppingList result = shoppingListService.updateShoppingList(1L, updated);
+
+        assertEquals("New", result.getName());
+        assertEquals("new-desc", result.getDescription());
+        assertTrue(result.isCompleted());
+        assertEquals(2, result.getItems().size());
+        assertEquals(BigDecimal.valueOf(3*2 + 1*5), result.getPrice());
     }
 
     @Test
